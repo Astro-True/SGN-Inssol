@@ -271,8 +271,8 @@ button {
 .banner_section {
     width: 100%;
     float: left;
-    background-image: url(../images/barco-2.png);
-    height: auto;
+    background-image: url(../images/fondo3.png);
+    height: 100%;
     padding-bottom: 200px;
     background-size: cover;
 }
@@ -312,6 +312,15 @@ button {
     margin-left: 0px;
     padding-top: 50px;
 }
+.banner_textt {
+    width: 100%;
+    float: left;
+    font-size: 16px;
+    color: #fefeff;
+    font-weight: 500;
+    margin-left: 0px;
+    padding-top: 0px;
+}
 
 .shop_bt {
     width: 35%;
@@ -326,7 +335,7 @@ button {
     border-top: 4px solid #ffa239;
     border-bottom: 4px solid #ffa239;
     padding: 5px 0px;
-    margin-top: 40px;
+    margin-top: 10px;
 }
 
 
@@ -373,9 +382,10 @@ button {
 .about_section {
     width: 100%;
     float: left;
-    background-image: url(../images/barco-4.png);
-    height: auto;
+    background-image: url(../images/fondo3.png);
+    height: 100%;
     padding-bottom: 220px;
+    background-size: cover;
 }
 
 .image_2 {
@@ -429,8 +439,11 @@ button {
 
 .product_section {
     width: 100%;
-    background-image: url(../images/sky-night.png);
+    background-image: url(../images/fondo3.png);
     float: left;
+    height: 100%;
+    padding-bottom: 220px;
+    background-size: cover;
 }
 
 .product_section_2 {
