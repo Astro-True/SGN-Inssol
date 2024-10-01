@@ -61,13 +61,18 @@ function cargarDatosEnTabla(datos) {
         fila.insertCell(3).textContent = dato.DatosPersonale.Correo;
         fila.insertCell(4).textContent = new Date(dato.DatosPersonale.FechaNacimiento).toLocaleDateString();
         fila.insertCell(5).textContent = dato.DatosPersonale.Domicilio;
+        // fila.insertCell(0).textContent = dato.nombre || 'N/A';
+        // fila.insertCell(1).textContent = dato.ci;
+        // fila.insertCell(2).textContent = dato.telefono;
+        // fila.insertCell(3).textContent = dato.Correo;
+        // fila.insertCell(4).textContent = new Date(dato.FechaNacimiento).toLocaleDateString();
+        // fila.insertCell(5).textContent = dato.Domicilio;
         let celdaAcciones = fila.insertCell(6);
         let btnEditar = document.createElement('button');
         btnEditar.textContent = 'Editar';
         btnEditar.className = 'btn-editar';
         btnEditar.onclick = function () {
             window.location.hash = '/Usuario/Editar';
-            configurarFormularioActualizar(dato);
         };
         let btnEliminar = document.createElement('button');
         btnEliminar.textContent = 'Eliminar';

@@ -137,13 +137,13 @@ function rutas() {
     changeStylesheet("AreaAdmin.css");
     container.classList.add("agregar-active");
     // Asegúrate de cargar el script de usuario
-    loadScript("./js/view/agregar.js")
+    loadScript("./js/view/editar.js")
       .then(() => {
         console.log("Script de Añadir cargado");
-        if (typeof renderAgregar === "function") {
-          renderAgregar();
+        if (typeof renderEditar === "function") {
+          renderEditar();
         } else {
-          console.error("La función renderAgregar no está definida");
+          console.error("La función Editar no está definida");
         }
       })
       .catch((err) => {
