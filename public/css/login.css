@@ -1,0 +1,253 @@
+* {
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.login-container {
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 18rem;
+    height: 25rem;
+    margin: 100px auto;
+    background: linear-gradient(136deg, rgba(109, 153, 210, 0.67) 28%, rgba(214, 213, 213, 0.67)50%, rgba(248, 191, 121, 0.67)75%);
+    border: 1mm ridge rgba(226, 227, 215, 0.6);
+}
+
+.logo {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    width: 90px;
+    height: auto;
+    border-radius: 50%;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"],
+.login-container input[type="number"],
+.login-container input[type="email"] {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 1px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+}
+
+.input-group i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+input {
+    width: 100%;
+    padding: 10px 8px 5px 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.forgot-password {
+    text-align: left;
+    color: #4a90e2;
+    text-decoration: none;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: inline-block;
+    padding: 5px;
+}
+
+#btn-ingresar {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#btn-ingresar:hover {
+    background-color: #ff8c00;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        margin-top: 50px;
+    }
+}
+
+#togglePassword {
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.fa-lock,
+.fa-lock-open {
+    display: inline-block;
+}
+
+.hidden {
+    display: none;
+}
+
+/*****************
+* recuperar.html *
+******************/
+.input-groupp {
+    position: relative;
+    top: 40px;
+    margin-bottom: 20px;
+}
+
+/* .login-container input[type="email"]{
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 1px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+} */
+.input-groupp i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #888;
+}
+
+.ctr-btn-recuperrar {
+    display: flex;
+    justify-content: center;
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%);
+}
+
+.btn-recuperrar {
+    margin-right: 15px;
+    margin-left: 15px;
+    width: 125px;
+    padding: 10px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    float: right;
+}
+
+.btn-recuperrar:hover {
+    background-color: #ff8c00;
+}
+
+/*****************
+* confirmar.html *
+******************/
+/* .login-container input[type="email"],
+.login-container input[type="text"],
+.login-container input[type="password"],
+.login-container input[type="number"] {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 1px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-sizing: border-box;
+} */
+.ctr-btn-confirmar {
+    display: flex;
+    justify-content: center;
+    top: 80%;
+    left: 50%;
+    position: absolute;
+    transform: translate(-50%);
+}
+
+.btn-confirmar {
+    margin-right: 15px;
+    margin-left: 15px;
+    width: 125px;
+    padding: 10px;
+    background-color: #ffa500;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    float: right;
+}
+
+.btn-confirmar:hover {
+    background-color: #ff8c00;
+}
+
+/* Estilos para la alerta personalizada */
+.custom-alert {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.custom-alert-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-alert-content p {
+    margin: 0 0 20px;
+}
+
+.custom-alert-content button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.custom-alert-content button:hover {
+    background-color: #0056b3;
+}

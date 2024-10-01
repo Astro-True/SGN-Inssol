@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="./css/login.css">
+    <script src="https://kit.fontawesome.com/e74c8090d8.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="login-container">
+        <h2 class="poppins-regular">Recuperar Contraseña</h2>
+        <form>
+            <div class="input-groupp">
+                <i class="fa-solid fa-envelope"></i>
+                <input type="email" placeholder="Correo Electronico" id="email">
+            </div>
+            <div class="ctr-btn-recuperrar">
+                <button class="btn-recuperrar" id="btn-rcpr-true" type="submit">Aceptar</button>
+                <button class="btn-recuperrar" id="btn-rcpr-false" type="submit">Cancelar</button>
+            </div>
+        </form>
+    </div>
+    <!-- Alerta personalizada -->
+    <div id="custom-alert" class="custom-alert" style="display: none;">
+        <div class="custom-alert-content">
+            <p id="alert-message"></p>
+            <button id="alert-ok-btn">OK</button>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+
+</html>
