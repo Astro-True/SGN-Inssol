@@ -48,24 +48,6 @@ function rutas() {
       button.classList.remove("active"); // Remover la clase 'active' de los demás botones
     }
   });
-  if (path === "Usuario/Agregar") {
-    console.log("/Agregar");
-    changeStylesheet("AreaAdmin.css");
-    container.classList.add("agregar-active");
-    // Asegúrate de cargar el script de usuario
-    loadScript("./js/view/agregar.js")
-      .then(() => {
-        console.log("Script de Añadir cargado");
-        if (typeof renderAgregar === "function") {
-          renderAgregar();
-        } else {
-          console.error("La función renderAgregar no está definida");
-        }
-      })
-      .catch((err) => {
-        console.error("Error al cargar el script de Agregar:", err);
-      });
-  }
   if (path === "/inicio") {
     console.log("/inicio");
     changeStylesheet("AreaAdmin.css");
@@ -132,16 +114,40 @@ function rutas() {
         console.error("Error al cargar el script de Roles:", err);
       });
   }
-  if (path === "/Usuario/Editar") {
-    console.log("/Editar");
+  if (path === "Usuario/Agregar") {
+    console.log("/Agregar");
     changeStylesheet("AreaAdmin.css");
     container.classList.add("agregar-active");
     // Asegúrate de cargar el script de usuario
-    loadScript("./js/view/editar.js")
+    loadScript("./js/view/agregar.js")
       .then(() => {
         console.log("Script de Añadir cargado");
-        if (typeof renderEditar === "function") {
-          renderEditar();
+        if (typeof renderAgregar === "function") {
+          renderAgregar();
+        } else {
+          console.error("La función renderAgregar no está definida");
+        }
+      })
+      .catch((err) => {
+        console.error("Error al cargar el script de Agregar:", err);
+      });
+  }
+  if (path.includes("/Usuario/Editar")) {
+    console.log("/Editar");
+    changeStylesheet("AreaAdmin.css");
+    container.classList.add("agregar-active");
+    const id = new URLSearchParams(path.split('?')[1]);
+    console.log(id.has('idUsuario'));
+    console.log(id.get('idUsuario'));
+    // Asegúrate de cargar el script de usuario
+    loadScript("./js/view/editar.js")
+    
+      .then(() => {
+        console.log("Script de Editar cargado");
+        //const idUsuario = partes[3];
+        if (typeof obtenerDatosUsuario === "function") {
+          
+          obtenerDatosUsuario(id.get('idUsuario'));
         } else {
           console.error("La función Editar no está definida");
         }

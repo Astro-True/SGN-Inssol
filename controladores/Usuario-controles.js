@@ -21,33 +21,33 @@ async function usuariosLista(req, res) {
     LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId";
 
         `);
-        const usuariosEstructurados = usuarios.map(usuario => ({
-          id: usuario.id,
-          nombre: usuario.nombre,
-          contrasenia: usuario.contrasenia,
-          createdAt: usuario.createdAt, // Asegúrate de incluir esta columna si está en la consulta
-          updatedAt: usuario.updatedAt, // Asegúrate de incluir esta columna si está en la consulta
-          DatosPersonale: {
-            ci: usuario.ci,
-            telefono: usuario.telefono,
-            Correo: usuario.Correo,
-            FechaNacimiento: usuario.FechaNacimiento,
-            Domicilio: usuario.Domicilio
-          },
-          DatosAcademico: {
-            GradoAcademico: usuario.GradoAcademico,
-            AreaEspecializacion: usuario.AreaEspecializacion,
-            Grado: usuario.Grado
-          }
-        }));
-    
-        console.log(usuariosEstructurados);
-        res.send(usuariosEstructurados);
-      } catch (error) {
-        console.error("Error al obtener la lista de usuarios:", error);
-        res.status(500).send({ message: "Error al obtener la lista de usuarios" });
-      }
-    }
+    const usuariosEstructurados = usuarios.map((usuario) => ({
+      id: usuario.id,
+      nombre: usuario.nombre,
+      contrasenia: usuario.contrasenia,
+      createdAt: usuario.createdAt, // Asegúrate de incluir esta columna si está en la consulta
+      updatedAt: usuario.updatedAt, // Asegúrate de incluir esta columna si está en la consulta
+      DatosPersonale: {
+        ci: usuario.ci,
+        telefono: usuario.telefono,
+        Correo: usuario.Correo,
+        FechaNacimiento: usuario.FechaNacimiento,
+        Domicilio: usuario.Domicilio,
+      },
+      DatosAcademico: {
+        GradoAcademico: usuario.GradoAcademico,
+        AreaEspecializacion: usuario.AreaEspecializacion,
+        Grado: usuario.Grado,
+      },
+    }));
+
+    console.log(usuariosEstructurados);
+    res.send(usuariosEstructurados);
+  } catch (error) {
+    console.error("Error al obtener la lista de usuarios:", error);
+    res.status(500).send({ message: "Error al obtener la lista de usuarios" });
+  }
+}
 
 // Crear un nuevo usuario
 async function usuarioCreate(req, res) {
@@ -75,7 +75,7 @@ async function usuarioCreate(req, res) {
 
       await sequelize.query(
         `INSERT INTO "DatosPersonales" (ci, telefono, "Correo", "FechaNacimiento", "Domicilio", "UsuarioId","createdAt", "updatedAt") 
-                 VALUES (?, ?, ?, ?, ?, ?,now(),now())`,
+                VALUES (?, ?, ?, ?, ?, ?,now(),now())`,
         {
           replacements: [
             ci,
@@ -90,7 +90,7 @@ async function usuarioCreate(req, res) {
       );
       await sequelize.query(
         `INSERT INTO "DatosAcademicos" ("GradoAcademico", "AreaEspecializacion", "Grado", "UsuarioId","createdAt", "updatedAt") 
-                 VALUES (?, ?, ?, ?,now(),now())`,
+                VALUES (?, ?, ?, ?,now(),now())`,
         {
           replacements: [gradoacademico, areaespecializacion, grado, usuarioId],
           transaction: t,
@@ -130,7 +130,7 @@ async function actualizarUsuario(req, res) {
       );
       await sequelize.query(
         `UPDATE "DatosPersonales" SET ci = ?, telefono = ?, "Correo" = ?, "FechaNacimiento" = ?, "Domicilio" = ? 
-                 WHERE "UsuarioId" = ?`,
+                WHERE "UsuarioId" = ?`,
         {
           replacements: [
             ci,
@@ -145,7 +145,7 @@ async function actualizarUsuario(req, res) {
       );
       await sequelize.query(
         `UPDATE "DatosAcademicos" SET "GradoAcademico" = ?, "AreaEspecializacion" = ?, "Grado" = ? 
-                 WHERE "UsuarioId" = ?`,
+                WHERE "UsuarioId" = ?`,
         {
           replacements: [gradoacademico, areaespecializacion, grado, idParams],
           transaction: t,
@@ -159,6 +159,59 @@ async function actualizarUsuario(req, res) {
     res.status(500).send({ message: "Error al actualizar el usuario" });
   }
 }
+// Obtener un usuario específico
+async function usuarioDetalle(req, res) {
+  const usuarioId = req.params.id;
+  try {
+      const [usuario] = await sequelize.query(`
+      SELECT
+          u.id,
+          u.nombre,
+          u.contrasenia,
+          dp.ci, 
+          dp.telefono, 
+          dp."Correo", 
+          dp."FechaNacimiento", 
+          dp."Domicilio",
+          da."GradoAcademico", 
+          da."AreaEspecializacion", 
+          da."Grado"
+      FROM "Usuarios" u
+      LEFT JOIN "DatosPersonales" dp ON u.id = dp."UsuarioId"
+      LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId"
+      WHERE u.id = ?;
+      `, {
+          replacements: [usuarioId]
+      });
+
+      if (usuario.length > 0) {
+          const usuarioEstructurado = {
+              id: usuario[0].id,
+              nombre: usuario[0].nombre,
+              contrasenia: usuario[0].contrasenia,
+              DatosPersonale: {
+                  ci: usuario[0].ci,
+                  telefono: usuario[0].telefono,
+                  Correo: usuario[0].Correo,
+                  FechaNacimiento: usuario[0].FechaNacimiento,
+                  Domicilio: usuario[0].Domicilio
+              },
+              DatosAcademico: {
+                  GradoAcademico: usuario[0].GradoAcademico,
+                  AreaEspecializacion: usuario[0].AreaEspecializacion,
+                  Grado: usuario[0].Grado
+              }
+          };
+          res.send(usuarioEstructurado);
+      } else {
+          res.status(404).send({ message: 'Usuario no encontrado' });
+      }
+  } catch (error) {
+      console.error("Error al obtener los detalles del usuario:", error);
+      res.status(500).send({ message: "Error al obtener los detalles del usuario" });
+  }
+}
+
 
 // Eliminar un usuario
 async function eliminarUsuario(req, res) {
@@ -198,6 +251,7 @@ module.exports = {
   usuariosLista,
   usuarioCreate,
   actualizarUsuario,
+  usuarioDetalle,
   eliminarUsuario,
 };
 

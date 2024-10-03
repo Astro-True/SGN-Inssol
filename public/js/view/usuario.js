@@ -72,7 +72,8 @@ function cargarDatosEnTabla(datos) {
         btnEditar.textContent = 'Editar';
         btnEditar.className = 'btn-editar';
         btnEditar.onclick = function () {
-            window.location.hash = '/Usuario/Editar';
+            window.location.hash = `/Usuario/Editar/?idUsuario=${dato.id}`;
+            // configurarFormularioActualizar();
         };
         let btnEliminar = document.createElement('button');
         btnEliminar.textContent = 'Eliminar';

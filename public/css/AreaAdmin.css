@@ -375,14 +375,16 @@ footer {
 }
 
 #form-container {
-   background:linear-gradient(136deg, rgba(167, 198, 238, 0.67) 28%, rgba(214, 213, 213, 0.67)50%, rgba(244, 203, 153, 0.67)75%)  ;
+    background:linear-gradient(136deg, rgba(167, 198, 238, 0.67) 28%, rgba(214, 213, 213, 0.67)50%, rgba(244, 203, 153, 0.67)75%)  ;
     border: 1mm ridge rgba(226, 227, 215, 0.6);
-   padding: 20px;
-   margin: 100px auto;
-   border-radius: 8px;
-   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-   width: 400px;
-   position: absolute;
+    padding: 20px;
+    margin: 100px auto;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    position: absolute;
+    left: 50%;
+    top: 0;
 }
 
 #form-container input{
@@ -392,7 +394,6 @@ footer {
     border: 1px solid #fff;
     border-radius: 4px;
     box-sizing: border-box;
-   
 }
 
 
