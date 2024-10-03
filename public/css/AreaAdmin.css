@@ -357,6 +357,9 @@ footer {
     /*background-color: rgba(255, 255, 255, 0.8);*/
     overflow: hidden;
     padding: 10px;
+    display: grid;
+    align-content: center;
+    height: 100%;
 }
 .content-agregar {
     width: 100%;
@@ -382,9 +385,8 @@ footer {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     width: 400px;
-    position: absolute;
-    left: 50%;
-    top: 0;
+    position: relative;
+    margin: auto;
 }
 
 #form-container input{

@@ -3,8 +3,8 @@ function renderInicio() {
     container.empty();
     const tablaHTML = `
     <div class=content-agregar>
-    <div class="myButton" data-view="usuario" id=btn-Actualizar>Actualizar</div>
-    <div class="myButton" data-view="Usuario/Agregar" id=btn-agregar>Añadir</div>
+    <div class="Add-Update" data-view="Usuario" id=btn-Actualizar>Actualizar</div>
+    <div class="Add-Update" data-view="Usuario/Agregar" id=btn-agregar>Añadir</div>
     </div>
             <table id="datos-tabla">
                 <thead>
