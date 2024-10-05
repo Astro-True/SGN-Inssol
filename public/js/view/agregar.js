@@ -26,8 +26,8 @@ function renderAgregar() {
                     <input type="email" id="correo" name="correo" required>
                 </div>
                 <div class="form-group">
-                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
-                    <input type="date" id="fechaNacimiento" name="fechanacimiento" required>
+                    <label for="fechanacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fechanacimiento" name="fechanacimiento" required>
                 </div>
                 <div class="form-group">
                     <label for="domicilio">Domicilio:</label>
