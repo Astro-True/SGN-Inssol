@@ -7,7 +7,9 @@ async function usuariosLista(req, res) {
     const [usuarios] = await sequelize.query(`
     SELECT
       u.id,
-      u.nombre, 
+      u.nombre,
+      u."createdAt",
+      u."updatedAt", 
       dp.ci, 
       dp.telefono, 
       dp."Correo", 
@@ -25,8 +27,8 @@ async function usuariosLista(req, res) {
       id: usuario.id,
       nombre: usuario.nombre,
       contrasenia: usuario.contrasenia,
-      createdAt: usuario.createdAt, // Asegúrate de incluir esta columna si está en la consulta
-      updatedAt: usuario.updatedAt, // Asegúrate de incluir esta columna si está en la consulta
+       createdAt: usuario.createdAt ? new Date(usuario.createdAt).toISOString() : null, // Verifica y formatea createdAt
+       updatedAt: usuario.updatedAt ? new Date(usuario.updatedAt).toISOString() : null, // Verifica y formatea updatedAt
       DatosPersonale: {
         ci: usuario.ci,
         telefono: usuario.telefono,
@@ -163,7 +165,7 @@ async function actualizarUsuario(req, res) {
 async function usuarioDetalle(req, res) {
   const usuarioId = req.params.id;
   try {
-      const [usuario] = await sequelize.query(`
+    const [usuario] = await sequelize.query(`
       SELECT
           u.id,
           u.nombre,
@@ -181,34 +183,34 @@ async function usuarioDetalle(req, res) {
       LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId"
       WHERE u.id = ?;
       `, {
-          replacements: [usuarioId]
-      });
+      replacements: [usuarioId]
+    });
 
-      if (usuario.length > 0) {
-          const usuarioEstructurado = {
-              id: usuario[0].id,
-              nombre: usuario[0].nombre,
-              contrasenia: usuario[0].contrasenia,
-              DatosPersonale: {
-                  ci: usuario[0].ci,
-                  telefono: usuario[0].telefono,
-                  Correo: usuario[0].Correo,
-                  FechaNacimiento: usuario[0].FechaNacimiento,
-                  Domicilio: usuario[0].Domicilio
-              },
-              DatosAcademico: {
-                  GradoAcademico: usuario[0].GradoAcademico,
-                  AreaEspecializacion: usuario[0].AreaEspecializacion,
-                  Grado: usuario[0].Grado
-              }
-          };
-          res.send(usuarioEstructurado);
-      } else {
-          res.status(404).send({ message: 'Usuario no encontrado' });
-      }
+    if (usuario.length > 0) {
+      const usuarioEstructurado = {
+        id: usuario[0].id,
+        nombre: usuario[0].nombre,
+        contrasenia: usuario[0].contrasenia,
+        DatosPersonale: {
+          ci: usuario[0].ci,
+          telefono: usuario[0].telefono,
+          Correo: usuario[0].Correo,
+          FechaNacimiento: usuario[0].FechaNacimiento,
+          Domicilio: usuario[0].Domicilio
+        },
+        DatosAcademico: {
+          GradoAcademico: usuario[0].GradoAcademico,
+          AreaEspecializacion: usuario[0].AreaEspecializacion,
+          Grado: usuario[0].Grado
+        }
+      };
+      res.send(usuarioEstructurado);
+    } else {
+      res.status(404).send({ message: 'Usuario no encontrado' });
+    }
   } catch (error) {
-      console.error("Error al obtener los detalles del usuario:", error);
-      res.status(500).send({ message: "Error al obtener los detalles del usuario" });
+    console.error("Error al obtener los detalles del usuario:", error);
+    res.status(500).send({ message: "Error al obtener los detalles del usuario" });
   }
 }
 

@@ -15,7 +15,8 @@ app.use(express.json());
 app.use(express.static('public'));
 
 const port = 3000;
-// probarconnexion();
+  //para la creacion de tablas no existenten de BD
+  //probarconnexion();
 
 app.get("/", (req, res) => {
   res.send("Hello World!");

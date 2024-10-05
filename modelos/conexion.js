@@ -1,5 +1,5 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/postgres");// Example for postgres
+const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/InssolBD");// Example for postgres
 // Sequelize('postgresql://basededatosdelsol_user:SCMg0hfV0FoBuxmRIpz0qfV6OzOCzvOU@dpg-cru1i82j1k6c73e0k7l0-a.virginia-postgres.render.com/basededatosdelsol', {
 //   dialect: 'postgres',
 //   dialectOptions: {
@@ -86,16 +86,30 @@ DatosAcademicos.belongsTo(Usuario);
 
 Usuario.hasOne(DatosPersonales);
 DatosPersonales.belongsTo(Usuario);
-
 async function probarconnexion() {
   try {
+    // Autenticación de la base de datos
+    await sequelize.authenticate();
+    console.log("Conexión establecida correctamente.");
+
+    // Sincronización de tablas (esto eliminará y recreará las tablas si existen)
     await sequelize.sync({ force: true });
-    sequelize.authenticate();
+    console.log("Tablas sincronizadas correctamente (si existían, se han eliminado y recreado).");
+  } catch (error) {
+    console.error("No se pudo conectar a la base de datos:", error);
+  }
+}
+/*
+async function probarconnexion() {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync({ force: true });
     console.log("Connection has been established successfully.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }
 }
+*/
 
 module.exports = {
   probarconnexion,
