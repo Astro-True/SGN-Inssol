@@ -34,5 +34,4 @@ function renderRoles() {
     `;
     container.append(tablaHTML);
 }
-
 document.addEventListener('DOMContentLoaded', renderRoles);

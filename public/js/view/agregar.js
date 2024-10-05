@@ -1,6 +1,10 @@
+// Función para renderizar el formulario de "Agregar Usuario"
 function renderAgregar() {
+    // Selecciona el contenedor donde se va a insertar el formulario
     const container = $("#view-container");
+    // Limpia el contenido del contenedor para evitar duplicados
     container.empty();
+    // Plantilla del formulario en HTML
     const formHTML = `
         <div id="form-container">
             <h2>Agregar Usuario</h2>
@@ -34,11 +38,11 @@ function renderAgregar() {
                     <input type="text" id="domicilio" name="domicilio" required>
                 </div>
                 <div class="form-group">
-                    <label for="gradoacademico">GradoAcademico:</label>
+                    <label for="gradoacademico">Grado Académico:</label>
                     <input type="text" id="gradoacademico" name="gradoacademico" required>
                 </div>
                 <div class="form-group">
-                    <label for="areaespecializacion">AreaEspecializacion:</label>
+                    <label for="areaespecializacion">Área de Especialización:</label>
                     <input type="text" id="areaespecializacion" name="areaespecializacion" required>
                 </div>
                 <div class="form-group">
@@ -46,51 +50,56 @@ function renderAgregar() {
                     <input type="text" id="grado" name="grado" required>
                 </div>
                 <div class="btn-form">
-                    <button type="submit" id=enviar-form>Enviar</button>
+                    <button type="submit" id="enviar-form">Enviar</button>
                     <button type="button" id="cancelar-form">Cancelar</button>
                 </div>
             </form>
         </div>
     `;
+    // Inserta el formulario en el contenedor
     container.append(formHTML);
+    // Configura el comportamiento del formulario
     configurarFormulario();
 }
 
+// Función para configurar los eventos del formulario
 function configurarFormulario() {
-    // Mostrar el formulario y manejar el evento de "Cancelar"
-    document.getElementById("form-container").style.display = "block";
+    // Añade un evento al botón de cancelar que redirige a la vista de usuarios
     document.getElementById("cancelar-form").addEventListener("click", function () {
-        window.location.hash = '/usuario';
-        rutas();
+        window.location.hash = '/usuario'; // Actualiza el hash de la URL para redirigir
+        //rutas(); // Llama a la función 'rutas' para cambiar la vista
     });
-    // Manejar el envío del formulario
+
+    // Maneja el envío del formulario
     document.getElementById("add-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        const data = {};
+        event.preventDefault(); // Previene el comportamiento predeterminado del formulario (no recargar la página)
+
+        const formData = new FormData(this); // Obtiene los datos del formulario
+        const data = {}; // Crear un objeto para almacenar los datos
+
+        // Recorre los datos del formulario y los guarda en el objeto 'data'
         formData.forEach((value, key) => {
             data[key] = value;
         });
+
+        // Realiza una solicitud POST al servidor para crear el usuario
         fetch(`${URL_SERVER}/Usuario/crear`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json' // Especifica que los datos se envían en formato JSON
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(data) // Convierte los datos a una cadena JSON
         })
-            // .then(response => response.json())
-            .then(result => {
-                alert('Usuario agregado exitosamente');
-                document.getElementById("add-form").reset();
-                document.getElementById("view-container").style.display = "block";
-                window.location.hash = '/usuario';
-                rutas();
-                //obtenerDatos(); // Recargar datos
-
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al agregar el usuario : catch');
-            });
+        // Maneja la respuesta de la solicitud
+        .then(result => {
+            alert('Usuario agregado exitosamente'); // Muestra un mensaje de éxito
+            document.getElementById("add-form").reset(); // Reinicia el formulario
+            window.location.hash = '/usuario'; // Redirige a la vista de usuarios
+            //rutas(); // Actualiza la vista
+        })
+        .catch(error => {
+            console.error('Error:', error); // Muestra el error en la consola
+            alert('Hubo un error al agregar el usuario'); // Muestra un mensaje de error
+        });
     });
 }
