@@ -4,9 +4,9 @@ const router = express.Router();
 const {
   rolesLista,
   rolesCreate,
-} = require("./../controladores/Roles-controles");
+} = require("../controladores/Roles-controles");
 
-router.get("/", rolesLista);
-router.post("/", rolesCreate);
+router.get("/lista", rolesLista);
+router.post("/crear", rolesCreate);
 
 module.exports = router;

@@ -3,13 +3,13 @@ const { sequelize } = require("../modelos/conexion"); // Asegúrate de importar 
 // Obtener lista de roles usando una consulta RAW
 async function rolesLista(req, res) {
   try {
-    const roles = await sequelize.query('SELECT * FROM Roles', {
+    const roles = await sequelize.query('SELECT * FROM "Roles"', {
       type: sequelize.QueryTypes.SELECT
     });
     res.send(roles);
   } catch (error) {
-    console.error('Error al obtener roles:', error);
-    res.status(500).send('Error al obtener los roles');
+    console.error('Error al obtener Roles:', error);
+    res.status(500).send('Error al obtener los Roles');
   }
 }
 
@@ -19,7 +19,7 @@ async function rolesCreate(req, res) {
 
   try {
     await sequelize.query('INSERT INTO Roles (nombre) VALUES (:nombre)', {
-      replacements: { nombre: nombre || 'roles' }, // Reemplazar el valor del nombre
+      replacements: { nombre: nombre || 'Roles' }, // Reemplazar el valor del nombre
       type: sequelize.QueryTypes.INSERT
     });
 
