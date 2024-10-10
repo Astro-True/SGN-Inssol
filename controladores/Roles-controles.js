@@ -1,46 +1,88 @@
 const { sequelize } = require("../modelos/conexion"); // Asegúrate de importar tu instancia de Sequelize correctamente
 
-// Obtener lista de roles usando una consulta RAW
+// // Obtener lista de roles usando una consulta RAW
+// async function rolesLista(req, res) {
+//   try {
+//     const roles = await sequelize.query('SELECT * FROM "Roles"', {
+//       type: sequelize.QueryTypes.SELECT
+//     });
+//     res.send(roles);
+//   } catch (error) {
+//     console.error('Error al obtener Roles:', error);
+//     res.status(500).send('Error al obtener los Roles');
+//   }
+// }
 async function rolesLista(req, res) {
   try {
-    const roles = await sequelize.query('SELECT * FROM "Roles"', {
-      type: sequelize.QueryTypes.SELECT
-    });
-    res.send(roles);
+    const [roles] = await sequelize.query(`
+      SELECT
+        r.id,
+        r."Nombre_Rol",
+        r."createdAt",
+        r."updatedAt"
+      FROM "Roles" r;
+    `);
+    
+    const RolesEstructurados = roles.map((rol) => ({
+      id: rol.id,
+      nombre: rol.Nombre_Rol,
+      createdAt: rol.createdAt ? new Date(rol.createdAt).toISOString() : null, // Verifica y formatea createdAt
+      updatedAt: rol.updatedAt ? new Date(rol.updatedAt).toISOString() : null, // Verifica y formatea updatedAt
+    }));
+
+    console.log(RolesEstructurados);
+    res.send(RolesEstructurados);
   } catch (error) {
-    console.error('Error al obtener Roles:', error);
-    res.status(500).send('Error al obtener los Roles');
+    console.error("Error al obtener la lista de Roles:", error);
+    res.status(500).send({ message: "Error al obtener la lista de Roles" });
   }
 }
-
 // Crear un rol usando una consulta RAW
-async function rolesCreate(req, res) {
-  const { nombre } = req.body; // Obtener el nombre del rol del cuerpo de la solicitud
+// async function rolesCreate(req, res) {
+//   try {
+//     const {
+//       Nombre_Rol,
+//     } = req.body;
 
+//     // Transacción para garantizar que los tres inserts se realicen correctamente
+//     await sequelize.transaction(async (t) => {
+//       const [roles] = await sequelize.query(
+//         `INSERT INTO "Roles" (Nombre_Rol,"createdAt", "updatedAt") VALUES (?, ?,now(),now()) RETURNING id`,
+//         { replacements: [Nombre_Rol], transaction: t }
+//       );
+//     });
+//     res.send("Rol creado con éxito");
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send({ message: "Error al crear el Rol" });
+//   }
+// }
+async function rolesCreate(req, res) {
   try {
-    await sequelize.query('INSERT INTO Roles (nombre) VALUES (:nombre)', {
-      replacements: { nombre: nombre || 'Roles' }, // Reemplazar el valor del nombre
-      type: sequelize.QueryTypes.INSERT
+    const { Nombre_Rol } = req.body;
+
+    // Validación básica
+    if (!Nombre_Rol) {
+      return res.status(400).send({ message: "El Nombre_Rol es requerido." });
+    }
+
+    // Transacción para garantizar que el insert se realice correctamente
+    await sequelize.transaction(async (t) => {
+      const [result] = await sequelize.query(
+        `INSERT INTO "Roles" (Nombre_Rol, "createdAt", "updatedAt") VALUES (?, now(), now()) RETURNING id`,
+        { replacements: [Nombre_Rol], transaction: t }
+      );
+
+      // Se puede capturar el ID del nuevo rol si es necesario
+      const newRoleId = result[0].id;
+      console.log(`Nuevo rol creado con ID: ${newRoleId}`);
     });
 
-    res.send('Rol creado exitosamente');
+    res.send("Rol creado con éxito");
   } catch (error) {
-    console.error('Error al crear el rol:', error);
-    res.status(500).send('Error al crear el rol');
+    console.error("Error al crear el rol:", error);
+    res.status(500).send({ message: "Error al crear el Rol" });
   }
 }
+
 module.exports = { rolesLista, rolesCreate };
-
-
-// const { Roles } = require("express");
-
-// async function rolesLista(req, res) {
-//   const roles = await Roles.findAll();
-//   res.send(roles);
-// }
-// async function rolesCreate(req, res) {
-//   const Roles = await Roles.Create({ nombre: "roles" });
-
-//   res.send("tristeza");
-// }
-// module.exports = { rolesLista, rolesCreate };

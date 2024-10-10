@@ -73,6 +73,22 @@ const Roles = sequelize.define("Roles", {
   Nombre_Rol: {
     type: DataTypes.STRING,
     allowNull: false,
+    defaultValue: 'admin',
+  },
+  Usuario:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Docente:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Roles:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
   },
 });
 Usuario.belongsToMany(Roles, { through: "RolUsuario" });
