@@ -1,5 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/ejemplo");// Example for postgres
+const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/InssolBD");
+//const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/ejemplo");
 // Sequelize('postgresql://basededatosdelsol_user:SCMg0hfV0FoBuxmRIpz0qfV6OzOCzvOU@dpg-cru1i82j1k6c73e0k7l0-a.virginia-postgres.render.com/basededatosdelsol', {
 //   dialect: 'postgres',
 //   dialectOptions: {
@@ -73,7 +74,6 @@ const Roles = sequelize.define("Roles", {
   Nombre_Rol: {
     type: DataTypes.STRING,
     allowNull: false,
-    defaultValue: 'admin',
   },
   Usuario:{
     type: DataTypes.BOOLEAN,
@@ -86,6 +86,21 @@ const Roles = sequelize.define("Roles", {
     defaultValue: false
   },
   Roles:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Cursos:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Horarios:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Grados:{
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false

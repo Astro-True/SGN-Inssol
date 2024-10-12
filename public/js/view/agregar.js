@@ -49,9 +49,18 @@ function renderAgregar() {
                     <label for="grado">Grado:</label>
                     <input type="text" id="grado" name="grado" required>
                 </div>
+                <div class="form-group">
+                    <label for="roles">Rol:</label>
+                        <select name="Rol" id="Rol">
+                            <option value="admin">Administrador</option>
+                            <option value="docente">Docente</option>
+                            <option value="estudiante">Estudiante</option>
+                            <option value="invitado">Invitado</option>
+                        </select>
+                </div>
                 <div class="btn-form">
-                    <button type="submit" id="enviar-form">Enviar</button>
-                    <button type="button" id="cancelar-form">Cancelar</button>
+                    <button class="button-28" type="submit" id="enviar-form"><span class="text">Enviar</span></button>
+                    <button class="button-28" type="button" id="cancelar-form">Cancelar</button>
                 </div>
             </form>
         </div>
