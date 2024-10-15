@@ -3,10 +3,10 @@ const router = express.Router();
 
 const {
   rolesLista,
-  rolesCreate,
+  rolesUpdate,
 } = require("../controladores/Roles-controles");
 
 router.get("/lista", rolesLista);
-router.post("/crear", rolesCreate);
+router.post("/actualizar", rolesUpdate);
 
 module.exports = router;

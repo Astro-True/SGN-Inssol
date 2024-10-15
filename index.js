@@ -4,7 +4,7 @@ const Usuariorutas = require("./rutas/Usuario-rutas");
 const DatosAcademicosrutas = require("./rutas/DatosAcademicos-rutas");
 const Datospersonalesrutas = require("./rutas/Datospersonales-rutas");
 const Historialcontraseniarutas = require("./rutas/Historialcontrasenia-rutas");
-const Rolesrutas = require("./rutas/Roles-rutas");
+const Rolesrutas = require("./rutas/roles-rutas");
 const cors = require("cors");
 
 const app = express();
