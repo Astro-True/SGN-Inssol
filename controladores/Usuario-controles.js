@@ -9,7 +9,8 @@ async function usuariosLista(req, res) {
       u.id,
       u.nombre,
       u."createdAt",
-      u."updatedAt", 
+      u."updatedAt",
+      u."RoleId",
       dp.ci, 
       dp.telefono, 
       dp."Correo", 
@@ -27,6 +28,7 @@ async function usuariosLista(req, res) {
       id: usuario.id,
       nombre: usuario.nombre,
       contrasenia: usuario.contrasenia,
+      roleid: usuario.RoleId,
        createdAt: usuario.createdAt ? new Date(usuario.createdAt).toISOString() : null, // Verifica y formatea createdAt
        updatedAt: usuario.updatedAt ? new Date(usuario.updatedAt).toISOString() : null, // Verifica y formatea updatedAt
       DatosPersonale: {
@@ -65,13 +67,14 @@ async function usuarioCreate(req, res) {
       gradoacademico,
       areaespecializacion,
       grado,
+      roleid,
     } = req.body;
 
     // Transacción para garantizar que los tres inserts se realicen correctamente
     await sequelize.transaction(async (t) => {
       const [usuario] = await sequelize.query(
-        `INSERT INTO "Usuarios" (nombre, contrasenia, "createdAt", "updatedAt") VALUES (?, ?,now(),now()) RETURNING id`,
-        { replacements: [nombre, contrasenia], transaction: t }
+        `INSERT INTO "Usuarios" (nombre, contrasenia, "RoleId", "createdAt", "updatedAt") VALUES (?, ?, ?, now(),now()) RETURNING id`,
+        { replacements: [nombre, contrasenia,roleid], transaction: t }
       );
       const usuarioId = usuario[0].id;
 
