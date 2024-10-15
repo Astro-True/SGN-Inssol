@@ -117,19 +117,50 @@ DatosAcademicos.belongsTo(Usuario);
 
 Usuario.hasOne(DatosPersonales);
 DatosPersonales.belongsTo(Usuario);
+// async function probarconnexion() {
+//   try {
+//     // Autenticación de la base de datos
+//     await sequelize.authenticate();
+//     console.log("Conexión establecida correctamente.");
+
+//     // Sincronización de tablas (esto eliminará y recreará las tablas si existen)
+//     await sequelize.sync({ force: true });
+//     console.log("Tablas sincronizadas correctamente (si existían, se han eliminado y recreado).");
+//   } catch (error) {
+//     console.error("No se pudo conectar a la base de datos:", error);
+//   }
+// }
 async function probarconnexion() {
   try {
-    // Autenticación de la base de datos
     await sequelize.authenticate();
     console.log("Conexión establecida correctamente.");
 
-    // Sincronización de tablas (esto eliminará y recreará las tablas si existen)
+        // Sincronización de tablas (esto eliminará y recreará las tablas si existen)
     await sequelize.sync({ force: true });
     console.log("Tablas sincronizadas correctamente (si existían, se han eliminado y recreado).");
+    // Inserción de roles predeterminados
+    await Roles.bulkCreate([
+      { Nombre_Rol: "Administrador", Usuario: true, Docente: true, Roles: true, Cursos: true, Horarios: true, Grados: true },
+      { Nombre_Rol: "Docente", Usuario: false, Docente: false, Roles: false, Cursos: false, Horarios: false, Grados: false },
+      { Nombre_Rol: "Estudiante", Usuario: false, Docente: false, Roles: false, Cursos: false, Horarios: false, Grados: false },
+    ]);
+    console.log("Roles predeterminados insertados correctamente.");
   } catch (error) {
     console.error("No se pudo conectar a la base de datos:", error);
   }
 }
+
+
+module.exports = {
+  probarconnexion,
+  sequelize,
+  Usuario,
+  Roles,
+  HistorialContrasenia,
+  DatosAcademicos,
+  DatosPersonales,
+};
+
 /*
 async function probarconnexion() {
   try {
@@ -141,13 +172,3 @@ async function probarconnexion() {
   }
 }
 */
-
-module.exports = {
-  probarconnexion,
-  sequelize,
-  Usuario,
-  Roles,
-  HistorialContrasenia,
-  DatosAcademicos,
-  DatosPersonales,
-};

@@ -60,7 +60,7 @@ async function rolesUpdate(req, res) {
     res.status(500).send({ message: "Error al actualizar el acceso" });
   }
 }
-
+module.exports = { rolesLista, rolesUpdate };
 
 // async function rolesUpdate(req, res) {
 //   try {
@@ -85,7 +85,7 @@ async function rolesUpdate(req, res) {
 
 
 
-module.exports = { rolesLista, rolesUpdate };
+
 // // Obtener lista de roles usando una consulta RAW
 // async function rolesLista(req, res) {
 //   try {
