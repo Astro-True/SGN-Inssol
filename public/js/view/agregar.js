@@ -51,7 +51,6 @@ function renderAgregar() {
                 </div>
                 <div class="form-group">
                     <label for="roles">Rol:</label>
-                        
                         <select id="select-roles" name="roleid">
                             <option id="roleid" value="">Seleccione un rol</option>
                         </select>

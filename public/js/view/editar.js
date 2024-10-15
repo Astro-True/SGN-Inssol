@@ -68,14 +68,8 @@ function renderEditar(dato) {
                 </div>
                 <div class="form-group">
                     <label for="roles">Rol:</label>
-                        <select name="Rol" id="Rol">
-                            <option value="admin">Administrador</option>
-                            <option value="docente">Docente</option>
-                            <option value="estudiante">Estudiante</option>
-                            <option value="invitado">Invitado</option>
-                        </select>
-                        <select id="select-roles">
-                            <option value="">Seleccione un rol</option>
+                        <select id="select-roles" name="roleid">
+                            <option id="roleid" value="">Seleccione un rol</option>
                         </select>
                 </div>
                 <div class="btn-form">
@@ -119,6 +113,7 @@ function configurarFormularioActualizar(dato) {
     document.getElementById("gradoacademico").value = dato.DatosAcademico.GradoAcademico || '';
     document.getElementById("areaespecializacion").value = dato.DatosAcademico.AreaEspecializacion || '';
     document.getElementById("grado").value = dato.DatosAcademico.Grado || '';
+    document.getElementById("roleid").value = dato.Roles.Nombre_Rol || '';
 
     // Manejar el envío del formulario actualizado
     document.getElementById("add-form").onsubmit = function (event) {

@@ -14,6 +14,7 @@ function renderDocente() {
         <thead>
             <tr>
                 <th>Nombre</th>
+                <th>Rol</th>
                 <th>CI</th>
                 <th>Teléfono</th>
                 <th>Correo</th>
@@ -71,18 +72,19 @@ function cargarDatosEnTabla(datos) {
         let fila = tabla.insertRow();
         // Añade la celda con el nombre del usuario, ci, telefono, correo domicilio
         fila.insertCell(0).textContent = dato.nombre || 'N/A';
-        fila.insertCell(1).textContent = dato.DatosPersonale.ci;
-        fila.insertCell(2).textContent = dato.DatosPersonale.telefono;
-        fila.insertCell(3).textContent = dato.DatosPersonale.Correo;
+        fila.insertCell(1).textContent = dato.Roles.Nombre_Rol
+        fila.insertCell(2).textContent = dato.DatosPersonale.ci;
+        fila.insertCell(3).textContent = dato.DatosPersonale.telefono;
+        fila.insertCell(4).textContent = dato.DatosPersonale.Correo;
         // Convierte la fecha de nacimiento a formato local
-        fila.insertCell(4).textContent = new Date(dato.DatosPersonale.FechaNacimiento).toLocaleDateString();
-        fila.insertCell(5).textContent = dato.DatosPersonale.Domicilio;
-        fila.insertCell(6).textContent = dato.DatosAcademico.GradoAcademico;
-        fila.insertCell(7).textContent = dato.DatosAcademico.AreaEspecializacion;
-        fila.insertCell(8).textContent = dato.DatosAcademico.grado;
+        fila.insertCell(5).textContent = new Date(dato.DatosPersonale.FechaNacimiento).toLocaleDateString();
+        fila.insertCell(6).textContent = dato.DatosPersonale.Domicilio;
+        fila.insertCell(7).textContent = dato.DatosAcademico.GradoAcademico;
+        fila.insertCell(8).textContent = dato.DatosAcademico.AreaEspecializacion;
+        fila.insertCell(9).textContent = dato.DatosAcademico.Grado;
         
         // Crea las acciones de editar y eliminar en la última celda
-        let celdaAcciones = fila.insertCell(9);
+        let celdaAcciones = fila.insertCell(10);
         // Botón de editar
         let btnEditar = document.createElement('button');
         btnEditar.textContent = 'Editar';

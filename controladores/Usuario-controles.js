@@ -11,6 +11,7 @@ async function usuariosLista(req, res) {
       u."createdAt",
       u."updatedAt",
       u."RoleId",
+      r."Nombre_Rol",
       dp.ci, 
       dp.telefono, 
       dp."Correo", 
@@ -21,16 +22,20 @@ async function usuariosLista(req, res) {
       da."Grado"
     FROM "Usuarios" u
     LEFT JOIN "DatosPersonales" dp ON u.id = dp."UsuarioId"
-    LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId";
+    LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId"
+    LEFT JOIN "Roles" r ON u."RoleId"= r."id";
 
         `);
     const usuariosEstructurados = usuarios.map((usuario) => ({
       id: usuario.id,
       nombre: usuario.nombre,
       contrasenia: usuario.contrasenia,
-      roleid: usuario.RoleId,
        createdAt: usuario.createdAt ? new Date(usuario.createdAt).toISOString() : null, // Verifica y formatea createdAt
        updatedAt: usuario.updatedAt ? new Date(usuario.updatedAt).toISOString() : null, // Verifica y formatea updatedAt
+      roleid: usuario.RoleId,
+      Roles: {
+        Nombre_Rol: usuario.Nombre_Rol,
+      },
       DatosPersonale: {
         ci: usuario.ci,
         telefono: usuario.telefono,
@@ -43,6 +48,7 @@ async function usuariosLista(req, res) {
         AreaEspecializacion: usuario.AreaEspecializacion,
         Grado: usuario.Grado,
       },
+      
     }));
 
     console.log(usuariosEstructurados);
