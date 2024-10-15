@@ -57,6 +57,9 @@ function renderAgregar() {
                             <option value="estudiante">Estudiante</option>
                             <option value="invitado">Invitado</option>
                         </select>
+                        <select id="select-roles">
+                            <option value="">Seleccione un rol</option>
+                        </select>
                 </div>
                 <div class="btn-form">
                     <button class="button-28" type="submit" id="enviar-form"><span class="text">Enviar</span></button>
@@ -69,6 +72,7 @@ function renderAgregar() {
     container.append(formHTML);
     // Configura el comportamiento del formulario
     configurarFormulario();
+    cargarRolesEnSelect();
 }
 
 // Función para configurar los eventos del formulario
@@ -99,16 +103,42 @@ function configurarFormulario() {
             },
             body: JSON.stringify(data) // Convierte los datos a una cadena JSON
         })
-        // Maneja la respuesta de la solicitud
-        .then(result => {
-            alert('Usuario agregado exitosamente'); // Muestra un mensaje de éxito
-            document.getElementById("add-form").reset(); // Reinicia el formulario
-            window.location.hash = '/usuario'; // Redirige a la vista de usuarios
-            //rutas(); // Actualiza la vista
-        })
-        .catch(error => {
-            console.error('Error:', error); // Muestra el error en la consola
-            alert('Hubo un error al agregar el usuario'); // Muestra un mensaje de error
-        });
+            // Maneja la respuesta de la solicitud
+            .then(result => {
+                alert('Usuario agregado exitosamente'); // Muestra un mensaje de éxito
+                document.getElementById("add-form").reset(); // Reinicia el formulario
+                window.location.hash = '/usuario'; // Redirige a la vista de usuarios
+                //rutas(); // Actualiza la vista
+            })
+            .catch(error => {
+                console.error('Error:', error); // Muestra el error en la consola
+                alert('Hubo un error al agregar el usuario'); // Muestra un mensaje de error
+            });
     });
 }
+// Función para obtener los roles desde el servidor y cargarlos en el select
+function cargarRolesEnSelect() {
+    const selectRoles = document.getElementById('select-roles');
+
+    fetch(`${URL_SERVER}/Roles/lista`)
+        .then(response => response.json())
+        .then(roles => {
+            // Limpia el select antes de agregar las opciones
+            selectRoles.innerHTML = '<option value="">Seleccione un rol</option>';
+
+            // Itera sobre los roles y agrega cada uno como opción
+            roles.forEach(rol => {
+                let option = document.createElement('option');
+                option.value = rol.id;
+                option.textContent = rol.nombre;
+                selectRoles.appendChild(option);
+            });
+        })
+        .catch(error => {
+            console.error('Error al cargar los roles:', error);
+        });
+}
+
+// Llamada a la función para cargar los roles cuando el DOM esté listo
+document.addEventListener('DOMContentLoaded', renderAgregar);
+

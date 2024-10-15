@@ -44,7 +44,7 @@ function renderDocente() {
     // Evento para el botón "Actualizar", recarga la vista actual de usuarios
     document.getElementById('btn-Actualizar').addEventListener('click', function () {
         // Llama de nuevo a la función para refrescar la vista
-        renderUsuario();
+        renderDocente();
     });
     // Evento para el botón "Añadir", cambia la URL para la vista de agregar usuario
     document.getElementById('btn-agregar').addEventListener('click', function () {

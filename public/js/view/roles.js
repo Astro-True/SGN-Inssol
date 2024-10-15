@@ -2,6 +2,9 @@ function renderRoles() {
     const container = $("#view-container");
     container.empty();
     const tablaHTML = `
+                <div class=content-agregar>
+        <div class="Add-Update" data-view="Usuario" id=btn-Actualizar>Actualizar</div>
+        </div>
         <table id="datos-tabla">
         <thead>
             <tr>
@@ -23,6 +26,11 @@ function renderRoles() {
         </table>
     `;
     container.append(tablaHTML);
+    // Evento para el botón "Actualizar", recarga la vista actual de usuarios
+    document.getElementById('btn-Actualizar').addEventListener('click', function () {
+        // Llama de nuevo a la función para refrescar la vista
+        renderRoles();
+    });
     obtenerDatos();
 }
 

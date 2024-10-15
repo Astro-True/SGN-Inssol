@@ -6,7 +6,7 @@ const {
   rolesUpdate,
 } = require("../controladores/Roles-controles");
 
-router.get("/lista", rolesLista);
+router.get(`/lista`, rolesLista);
 router.post("/actualizar", rolesUpdate);
 
 module.exports = router;
