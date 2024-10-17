@@ -5,6 +5,7 @@ const DatosAcademicosrutas = require("./rutas/DatosAcademicos-rutas");
 const Datospersonalesrutas = require("./rutas/Datospersonales-rutas");
 const Historialcontraseniarutas = require("./rutas/Historialcontrasenia-rutas");
 const Rolesrutas = require("./rutas/roles-rutas");
+const AutenticacionRutas = require('./rutas/autentification-rutas')
 const cors = require("cors");
 
 const app = express();
@@ -27,6 +28,7 @@ app.use("/Roles", Rolesrutas);
 app.use("/Historialcontraseniarutas", Historialcontraseniarutas);
 app.use("/Datospersonales", Datospersonalesrutas);
 app.use("/DatosAcademicos", DatosAcademicosrutas);
+app.use("/Autenticacion", AutenticacionRutas);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

@@ -16,7 +16,7 @@ function renderLoginView() {
                 <i class="fa-solid fa-lock" id="togglePassword"></i>
                 <input type="password" placeholder="Ingrese Contraseña" id="form-password" autocomplete="current-password">
             </div>
-            <a href="recuperar.html" class="forgot-password">¿Olvidaste tu contraseña?</a>
+            <a href="recuperar.js" class="forgot-password">¿Olvidaste tu contraseña?</a>
             <button type="submit" id="btn-ingresar">Ingresar</button>
         </form>
     </div>
@@ -41,7 +41,24 @@ function renderLoginView() {
         const password = document.getElementById('form-password').value;
         console.log('Usuario:', usuario, 'Contraseña:', password);
         // Redirigir o mostrar un mensaje de éxito/error
+    
+    $.ajax({
+        type: "POST",
+        url: "http://localhost:3000/Autenticacion/login", // Endpoint del backend que manejará el login
+        data: { nombre: usuario, contrasenia: password },
+        success: function (response) {
+            alert("Login exitoso");
+          // Aquí podrías redirigir o hacer alguna acción tras un login exitoso
+          // window.location.href = 'AreaAdmin.html';
+            if (confirm('¿Deseas ir a la página de confirmación?')) {
+                window.location.href = 'AreaAdmin.html';
+            }
+        },
+        error: function (error) {
+            alert("Error en el login: " + error.responseText);
+        },
     });
+});
 }
 
 // Llama a la función cuando el DOM esté completamente cargado
