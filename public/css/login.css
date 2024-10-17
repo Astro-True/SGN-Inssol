@@ -4,7 +4,7 @@
     font-style: normal;
 }
 
-body {
+.layout {
     background-color: #f0f0f0;
     display: flex;
     justify-content: center;

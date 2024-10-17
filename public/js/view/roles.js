@@ -57,7 +57,6 @@ function cargarDatosEnTabla(datos) {
         fila.insertCell(4).innerHTML = `<input type="checkbox" ${dato.cursos ? 'checked' : ''} data-id="${dato.id}" data-field="Cursos">`;
         fila.insertCell(5).innerHTML = `<input type="checkbox" ${dato.horarios ? 'checked' : ''} data-id="${dato.id}" data-field="Horarios">`;
         fila.insertCell(6).innerHTML = `<input type="checkbox" ${dato.grados ? 'checked' : ''} data-id="${dato.id}" data-field="Grados">`;
-
     });
 
     // Añadir evento a los checkboxes
@@ -94,10 +93,7 @@ function actualizarAcceso(id, field, value) {
         .catch(error => {
             console.error('Hubo un problema con la actualización:', error);
         });
-
 }
-
-
 
 // Función para obtener los datos desde el servidor
 function obtenerDatos() {
@@ -123,32 +119,3 @@ function obtenerDatos() {
         });
 }
 document.addEventListener('DOMContentLoaded', renderRoles);
-
-
-// <tr>
-// <td class="role">Administrador</td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// </tr>
-// <tr>
-// <td class="role">Docente</td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// </tr>
-// <tr>
-// <td class="role">Estudiante</td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// <td><input type="checkbox" checked></td>
-// </tr>

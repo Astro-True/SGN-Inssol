@@ -74,11 +74,11 @@ function rutas() {
     // Cambia el estilo a 'AreaAdmin.css'
     changeStylesheet("login.css");
     // Carga dinámicamente el script 'inicio.js'
-    loadScript("./js/view/inicio.js")
+    loadScript("./js/view/loginView.js")
       .then(() => {
         console.log("Script de Inicio cargado");
-        if (typeof renderInicio === "function") {
-          renderInicio();
+        if (typeof renderLoginView === "function") {
+          renderLoginView();
         } else {
           console.error("La función renderInicio no está definida");
         }

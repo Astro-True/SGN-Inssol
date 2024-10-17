@@ -73,18 +73,26 @@ function renderEditar(dato) {
                         </select>
                 </div>
                 <div class="btn-form">
-                    <button type="submit" id=enviar-form>Enviar</button>
-                    <button type="button" id="cancelar-form">Cancelar</button>
+                    <button class="button-28" type="submit" id="enviar-form"><span class="text">Enviar</span></button>
+                    <button class="button-28" type="button" id="cancelar-form">Cancelar</button>
                 </div>
             </form>
         </div>
     `;
   container.append(formHTML);
-  if (dato) {
-    configurarFormularioActualizar(dato);
-} else {
-    console.error('Los datos del usuario no están disponibles');
-}
+  //cargarRolesEnSelect(dato.RoleId);
+//   if (dato) {
+//     configurarFormularioActualizar(dato);
+// } else {
+//     console.error('Los datos del usuario no están disponibles');
+// }
+cargarRolesEnSelect(() => {
+    if (dato) {
+        configurarFormularioActualizar(dato);
+    } else {
+        console.error('Los datos del usuario no están disponibles');
+    }
+});
 }
 function configurarFormularioActualizar(dato) {
     console.log(dato);
@@ -113,7 +121,9 @@ function configurarFormularioActualizar(dato) {
     document.getElementById("gradoacademico").value = dato.DatosAcademico.GradoAcademico || '';
     document.getElementById("areaespecializacion").value = dato.DatosAcademico.AreaEspecializacion || '';
     document.getElementById("grado").value = dato.DatosAcademico.Grado || '';
-    document.getElementById("roleid").value = dato.Roles.Nombre_Rol || '';
+    if (dato.RoleId) {
+        document.getElementById("select-roles").value = dato.RoleId;
+    }
 
     // Manejar el envío del formulario actualizado
     document.getElementById("add-form").onsubmit = function (event) {
@@ -145,4 +155,30 @@ function configurarFormularioActualizar(dato) {
             alert('Hubo un error al actualizar el usuario');
         });
     };
+}
+function cargarRolesEnSelect(callback) {
+    const selectRoles = document.getElementById('select-roles');
+
+    fetch(`${URL_SERVER}/Roles/lista`)
+        .then(response => response.json())
+        .then(roles => {
+            // Limpia el select antes de agregar las opciones
+            selectRoles.innerHTML = '<option value="">Seleccione un rol</option>';
+
+            // Itera sobre los roles y agrega cada uno como opción
+            roles.forEach(rol => {
+                let option = document.createElement('option');
+                option.value = rol.id;
+                option.textContent = rol.nombre;
+                selectRoles.appendChild(option);
+            });
+
+            // Ejecuta el callback si se proporciona
+            if (callback) {
+                callback();
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar los roles:', error);
+        });
 }

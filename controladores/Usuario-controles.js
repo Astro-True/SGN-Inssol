@@ -131,13 +131,17 @@ async function actualizarUsuario(req, res) {
       gradoacademico,
       areaespecializacion,
       grado,
+      roleid,
     } = req.body;
+    if (!roleid) {
+      return res.status(400).send({ message: 'El rol es obligatorio' });
+  }
 
     // Transacción para garantizar que todas las actualizaciones se realicen correctamente
     await sequelize.transaction(async (t) => {
       await sequelize.query(
-        `UPDATE "Usuarios" SET nombre = ?, contrasenia = ? WHERE id = ?`,
-        { replacements: [nombre, contrasenia, idParams], transaction: t }
+        `UPDATE "Usuarios" SET nombre = ?, contrasenia = ?, "RoleId" = ? WHERE id = ?`,
+        { replacements: [nombre, contrasenia, roleid, idParams], transaction: t }
       );
       await sequelize.query(
         `UPDATE "DatosPersonales" SET ci = ?, telefono = ?, "Correo" = ?, "FechaNacimiento" = ?, "Domicilio" = ? 
@@ -186,7 +190,8 @@ async function usuarioDetalle(req, res) {
           dp."Domicilio",
           da."GradoAcademico", 
           da."AreaEspecializacion", 
-          da."Grado"
+          da."Grado",
+          u."RoleId"
       FROM "Usuarios" u
       LEFT JOIN "DatosPersonales" dp ON u.id = dp."UsuarioId"
       LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId"
@@ -200,6 +205,7 @@ async function usuarioDetalle(req, res) {
         id: usuario[0].id,
         nombre: usuario[0].nombre,
         contrasenia: usuario[0].contrasenia,
+        roleid: usuario[0].RoleId,
         DatosPersonale: {
           ci: usuario[0].ci,
           telefono: usuario[0].telefono,
