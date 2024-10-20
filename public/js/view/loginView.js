@@ -1,6 +1,6 @@
 function renderLoginView() {
-    // const container = $("#view-container");
-    // container.empty();
+    //const container = $("#view-container");
+    //container.empty();
     const html = `
     <div class="login-container">
         <div class="logo">
@@ -16,7 +16,7 @@ function renderLoginView() {
                 <i class="fa-solid fa-lock" id="togglePassword"></i>
                 <input type="password" placeholder="Ingrese Contraseña" id="form-password" autocomplete="current-password">
             </div>
-            <a href="recuperar.js" class="forgot-password">¿Olvidaste tu contraseña?</a>
+            <a href="#/recuperar" class="forgot-password">¿Olvidaste tu contraseña?</a>
             <button type="submit" id="btn-ingresar">Ingresar</button>
         </form>
     </div>
@@ -48,8 +48,17 @@ function renderLoginView() {
         data: { nombre: usuario, contrasenia: password },
         success: function (response) {
             alert("Login exitoso");
-          // Aquí podrías redirigir o hacer alguna acción tras un login exitoso
-          // window.location.href = 'AreaAdmin.html';
+            if (response.data) {
+                //sessionStorage.setItem('userRole', response.data.rol);
+                //sessionStorage.setItem('userRole', JSON.stringify(role));
+                sessionStorage.setItem('userRole', JSON.stringify(response.data.rol));
+                console.log(sessionStorage)
+                    
+                // Guardar los datos del usuario en sessionStorage
+                //sessionStorage.setItem('user', JSON.stringify(response.data));
+            }
+
+            // Redirigir a la página de administración
             if (confirm('¿Deseas ir a la página de confirmación?')) {
                 window.location.href = 'AreaAdmin.html';
             }
@@ -59,7 +68,18 @@ function renderLoginView() {
         },
     });
 });
-}
 
-// Llama a la función cuando el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', renderLoginView);
+// Manejador para el cambio de hash
+window.addEventListener("hashchange", (e) => {
+    const currentHash = window.location.hash; // Obtiene el hash actual
+
+    // Evitar la recarga si regresa a User o va a confirmar
+    if (currentHash === '#/User' || currentHash === '#/recuperar' || currentHash === '#/confirmar') {
+        // No se hace nada, solo evitar la recarga
+    } else {
+        // Llama a la función rutas si el hash es diferente
+        rutas(e);
+    }
+});
+}
+ document.addEventListener('DOMContentLoaded', renderLoginView);

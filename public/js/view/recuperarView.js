@@ -1,15 +1,15 @@
-function renderRecuperarPasswordView() {
+function renderRecuperarView() {
     const html = `
     <div class="login-container">
         <h2 class="poppins-regular">Recuperar Contraseña</h2>
-        <form id="recuperar-form">
+        <form>
             <div class="input-groupp">
                 <i class="fa-solid fa-envelope"></i>
-                <input type="email" placeholder="Correo Electrónico" id="email" required>
+                <input type="email" placeholder="Correo Electrónico" id="email">
             </div>
             <div class="ctr-btn-recuperrar">
                 <button class="btn-recuperrar" id="btn-rcpr-true" type="submit">Aceptar</button>
-                <button class="btn-recuperrar" id="btn-rcpr-false" type="button">Cancelar</button>
+                <button class="btn-recuperrar" id="btn-rcpr-false" type="submit">Cancelar</button>
             </div>
         </form>
     </div>
@@ -26,42 +26,31 @@ function renderRecuperarPasswordView() {
     const container = document.getElementById('layout'); // Asegúrate de que este contenedor exista en tu HTML
     container.innerHTML = html;
 
-    // Lógica de recuperación de contraseña
-    document.getElementById('recuperar-form').addEventListener('submit', function(event) {
-        event.preventDefault(); // Prevenir el envío del formulario
-        const email = document.getElementById('email').value;
-
-        console.log('Correo Electrónico:', email);
-        
-        // Aquí puedes realizar una solicitud AJAX para manejar la recuperación de contraseña
-        $.ajax({
-            type: "POST",
-            url: "http://localhost:3000/recuperar", // Endpoint del backend que manejará la recuperación de contraseña
-            data: { email: email },
-            success: function (response) {
-                showAlert("Correo de recuperación enviado con éxito");
-            },
-            error: function (error) {
-                showAlert("Error en la recuperación: " + error.responseText);
-            },
-        });
+    // Manejar eventos
+    const btnAceptar = document.getElementById('btn-rcpr-true');
+    const btnCancelar = document.getElementById('btn-rcpr-false');
+    window.addEventListener("hashchange", (e) => {
+        const currentHash = window.location.hash; // Obtiene el hash actual
+    
+        // Evitar la recarga si regresa a User o va a confirmar
+        if (currentHash === '#/User' || currentHash === '#/recuperar' || currentHash === '#/confirmar') {
+            // No se hace nada, solo evitar la recarga
+        } else {
+            // Llama a la función rutas si el hash es diferente
+            rutas(e);
+        }
+    });
+    // Evento para el botón "Aceptar"
+    btnAceptar.addEventListener('click', (e) => {
+        e.preventDefault(); // Previene el comportamiento predeterminado del formulario
+        // Aquí puedes agregar la lógica para procesar el correo electrónico antes de redirigir
+        window.location.hash = '#/confirmar'; // Cambia al hash #confirmar
     });
 
-    // Cancelar la acción
-    document.getElementById('btn-rcpr-false').addEventListener('click', function() {
-        window.location.href = 'login.html'; // Redirige a la página de login al cancelar
+    // Evento para el botón "Cancelar"
+    btnCancelar.addEventListener('click', () => {
+        window.location.hash = '#/User'; // Cambia al hash #User
     });
-
-    // Mostrar alerta personalizada
-    function showAlert(message) {
-        document.getElementById('alert-message').innerText = message;
-        document.getElementById('custom-alert').style.display = 'block';
-
-        document.getElementById('alert-ok-btn').addEventListener('click', function() {
-            document.getElementById('custom-alert').style.display = 'none';
-        });
-    }
 }
 
-// Llama a la función cuando el DOM esté completamente cargado
-document.addEventListener('DOMContentLoaded', renderRecuperarPasswordView);
+document.addEventListener('DOMContentLoaded', renderRecuperarView);

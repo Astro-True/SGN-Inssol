@@ -76,19 +76,15 @@ function configurarFormulario() {
         window.location.hash = '/usuario'; // Actualiza el hash de la URL para redirigir
         //rutas(); // Llama a la función 'rutas' para cambiar la vista
     });
-
     // Maneja el envío del formulario
     document.getElementById("add-form").addEventListener("submit", function (event) {
         event.preventDefault(); // Previene el comportamiento predeterminado del formulario (no recargar la página)
-
         const formData = new FormData(this); // Obtiene los datos del formulario
         const data = {}; // Crear un objeto para almacenar los datos
-
         // Recorre los datos del formulario y los guarda en el objeto 'data'
         formData.forEach((value, key) => {
             data[key] = value;
         });
-
         // Realiza una solicitud POST al servidor para crear el usuario
         fetch(`${URL_SERVER}/Usuario/crear`, {
             method: 'POST',
@@ -102,7 +98,6 @@ function configurarFormulario() {
                 alert('Usuario agregado exitosamente'); // Muestra un mensaje de éxito
                 document.getElementById("add-form").reset(); // Reinicia el formulario
                 window.location.hash = '/usuario'; // Redirige a la vista de usuarios
-                //rutas(); // Actualiza la vista
             })
             .catch(error => {
                 console.error('Error:', error); // Muestra el error en la consola
@@ -113,13 +108,11 @@ function configurarFormulario() {
 // Función para obtener los roles desde el servidor y cargarlos en el select
 function cargarRolesEnSelect() {
     const selectRoles = document.getElementById('select-roles');
-
     fetch(`${URL_SERVER}/Roles/lista`)
         .then(response => response.json())
         .then(roles => {
             // Limpia el select antes de agregar las opciones
             selectRoles.innerHTML = '<option value="">Seleccione un rol</option>';
-
             // Itera sobre los roles y agrega cada uno como opción
             roles.forEach(rol => {
                 let option = document.createElement('option');
@@ -132,7 +125,6 @@ function cargarRolesEnSelect() {
             console.error('Error al cargar los roles:', error);
         });
 }
-
 // Llamada a la función para cargar los roles cuando el DOM esté listo
 document.addEventListener('DOMContentLoaded', renderAgregar);
 

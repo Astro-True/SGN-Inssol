@@ -251,3 +251,29 @@ input {
 .custom-alert-content button:hover {
     background-color: #0056b3;
 }
+
+
+/* Ocultar el header completo */
+.contenedor-header {
+    display: none;
+}
+
+/* Ocultar el sidebar completo */
+.sidebar {
+    display: none;
+}
+
+/* Ocultar el main (contenido principal) */
+main {
+    display: none;
+}
+
+/* Ocultar el footer completo */
+footer {
+    display: none;
+}
+#fondoAdmin {
+    visibility: hidden;
+    display:  none;
+}
+

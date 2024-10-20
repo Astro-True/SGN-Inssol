@@ -1,13 +1,20 @@
-// Selecciona todos los botones con la clase 'myButton' y añade un evento 'click' a cada uno
-document.querySelectorAll(".myButton").forEach((button) => {
-  button.addEventListener("click", function () {
-    // Obtiene la ruta definida en 'data-view' del botón
-    const ruta = button.getAttribute("data-view");
-    // Actualiza el hash de la URL
-    window.location.hash = ruta;
-    rutas();
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll(".myButton, .forgot-password, .User").forEach((button) => {
+    if (button) {
+      button.addEventListener("click", function (event) {
+        if (button.classList.contains("forgot-password")) {
+          event.preventDefault();
+        }
+        const ruta = button.classList.contains("forgot-password") 
+          ? button.getAttribute("href") 
+          : button.getAttribute("data-view");
+        window.location.hash = ruta;
+        rutas();
+      });
+    }
   });
 });
+
 
 // Función para cargar scripts de manera dinámica
 function loadScript(src) {
@@ -29,6 +36,7 @@ function loadScript(src) {
 function changeStylesheet(cssFile) {
   // Remueve la hoja de estilos 'roles.css' si está cargada
   removeStylesheet("roles.css");
+  removeStylesheet("login.css");
   // Crea un nuevo elemento <link>
   const link = document.createElement("link");
   // Define que es una hoja de estilos
@@ -53,32 +61,35 @@ function rutas() {
   // Obtiene el valor del hash sin el '#'
   let path = window.location.hash.substring(1);
   console.log(path);
+  
   // Resetear clases de estilo para manejar diferentes rutas
   const container = document.getElementById("view-container");
-  container.classList.remove("agregar-active");
+  if(container=="view-container"){
+  container.classList.remove("agregar-active");}
   // Manejo de clases activas en los botones según la ruta actual
   document.querySelectorAll(".myButton").forEach((button) => {
     const ruta = button.getAttribute("data-view");
     if (ruta === path) {
       // Agrega la clase 'active' al botón actual
       button.classList.add("active");
+        container.classList.remove("agregar-active");
     } else {
       // Remueve la clase 'active' de los demás botones
       button.classList.remove("active");
     }
   });
-
   // Rutas específicas y scripts asociados que deben cargarse según el hash actual
   if (path === "/inicio") {
     console.log("/inicio");
     // Cambia el estilo a 'AreaAdmin.css'
-    changeStylesheet("login.css");
+    changeStylesheet("AreaAdmin.css");
     // Carga dinámicamente el script 'inicio.js'
-    loadScript("./js/view/loginView.js")
+    loadScript("./js/view/inicio.js")
       .then(() => {
         console.log("Script de Inicio cargado");
-        if (typeof renderLoginView === "function") {
-          renderLoginView();
+        if (typeof renderInicio === "function") {
+          removeStylesheet("login.css");
+          renderInicio();
         } else {
           console.error("La función renderInicio no está definida");
         }
@@ -89,7 +100,7 @@ function rutas() {
   }
 
   // Cargar y renderizar la vista de usuarios
-  if (path === "/usuario") {
+  if (path === "/usuario" && !userHasPermission(userRole, 'usuario') ) {
     console.log("/usuario");
     changeStylesheet("AreaAdmin.css");
     loadScript("./js/view/usuario.js")
@@ -97,6 +108,7 @@ function rutas() {
         console.log("Script de Usuario cargado");
         if (typeof renderUsuario === "function") {
           renderUsuario();
+          //container.classList.remove("agregar-active");
         } else {
           console.error("La función renderUsuario no está definida");
         }
@@ -186,16 +198,144 @@ function rutas() {
         console.error("Error al cargar el script de Editar:", err);
       });
   }
+  
+  // Rutas específicas y scripts asociados que deben cargarse según el hash actual
+  if (path === "/User") {
+    console.log("/User");
+    // Cambia el estilo a 'AreaAdmin.css'
+    changeStylesheet("login.css");
+    // Carga dinámicamente el script 'inicio.js'
+    loadScript("./js/view/loginView.js")
+      .then(() => {
+        console.log("Script de Inicio cargado");
+        if (typeof renderLoginView === "function") {
+          renderLoginView();
+        } else {
+          console.error("La función renderInicio no está definida");
+        }
+      })
+      .catch((err) => {
+        console.error("Error al cargar el script de Inicio:", err);
+      });
+  }
+
+  // Cargar y renderizar la vista de recuperar cuando el hash es #recuperar
+  if (path === "/recuperar") {
+    console.log("Cargando vista de recuperar");
+    changeStylesheet("login.css");
+    loadScript("./js/view/recuperarView.js")
+        .then(() => {
+            console.log("Script de recuperar cargado");
+            if (typeof renderRecuperarView === "function") {
+                renderRecuperarView();
+            } else {
+                console.error("La función renderRecuperarView no está definida");
+            }
+        })
+        .catch((err) => {
+            console.error("Error al cargar el script de Recuperar:", err);
+        });
+  }
+  // Cargar y renderizar la vista de recuperar cuando el hash es #recuperar
+  if (path === "/confirmar") {
+    console.log("Cargando vista de confirmar");
+    changeStylesheet("login.css");
+    loadScript("./js/view/confirmarView.js")
+        .then(() => {
+            console.log("Script de recuperar cargado");
+            if (typeof renderConfirmarView === "function") {
+              renderConfirmarView();
+            } else {
+                console.error("La función renderConfirmarView no está definida");
+            }
+        })
+        .catch((err) => {
+            console.error("Error al cargar el script de Confirmar:", err);
+        });
+  }
+}
+// window.addEventListener("hashchange", (e) => {
+//   const currentHash = window.location.hash; // Obtiene el hash actual
+//   if (currentHash === "#/User" || currentHash === "#/recuperar" || currentHash === "#/confirmar") {
+//     localStorage.setItem('wasUserHash', 'true'); // Establece un valor en localStorage
+//   } else {
+//     // Si cambias de #/User a otro hash y estaba en #/User
+//     if (localStorage.getItem('wasUserHash') === 'true') {
+//       localStorage.removeItem('wasUserHash'); // Elimina el valor de localStorage
+//       window.location.reload(); // Recarga la página
+//     }
+//   }
+//   rutas(e); // Llama a la función rutas con el evento
+// });
+
+// $(document).ready(() => {
+//   // Verifica si no hay hash en la URL
+//   // if (!window.location.hash) {
+//   //   // Si no hay hash, redirige a #/Inssol
+//   //   window.location.hash = "#/Inssol";
+//   // }
+//   // Inicializar las rutas
+//   rutas("");
+// });
+// Define la función checkRolePermissions
+function checkRolePermissions() {
+  let userRole = sessionStorage.getItem('userRole');
+  
+  // Verificar si es un JSON válido o un string simple
+  try {
+    userRole = JSON.parse(userRole);
+  } catch (error) {
+    console.warn('userRole no es JSON, se usará como string simple.');
+  }
+
+  if (!userRole) {
+    alert("No tienes permisos para acceder a esta página.");
+    window.location.hash = '/User'; // Redirigir si no hay rol
+    return;
+  }
+
+  // Obtener la lista de roles y permisos desde el servidor
+  fetch(`${URL_SERVER}/Roles/lista`)
+    .then(response => response.json())
+    .then(roles => {
+      const userPermissions = roles.find(role => role.nombre === userRole);
+      if (!userPermissions) {
+        alert("Rol no encontrado.");
+        return;
+      }
+    // Configurar la visibilidad de las vistas basadas en los permisos del rol
+    if (!userPermissions.usuario) $("#usuario").hide(); // Make sure #usuario exists
+    if (!userPermissions.docente) $("#docente").hide(); // Make sure #docente exists
+    if (!userPermissions.roles) $("#roles").hide(); // Make sure #roles exists
+    if (!userPermissions.cursos) $("#cursos").hide(); // Make sure #cursos exists
+    if (!userPermissions.horarios) $("#horarios").hide(); // Make sure #horarios exists
+    if (!userPermissions.grados) $("#grados").hide(); // Make sure #grados exists
+  })
+    .catch(error => console.error("Error al obtener los permisos del rol:", error));
 }
 
-// Escuchar cambios en el hash de la URL
+// Manejador de cambio de hash para llamar a rutas y validar permisos
+$(window).on('hashchange', function() {
+  rutas(); // Ejecuta la lógica de rutas
+});
 window.addEventListener("hashchange", (e) => {
-  // Ejecutar la función 'rutas' cada vez que cambia el hash
-  rutas(e);
+  const currentHash = window.location.hash; // Obtiene el hash actual
+  if (currentHash === "#/User" || currentHash === "#/recuperar" || currentHash === "#/confirmar") {
+    localStorage.setItem('wasUserHash', 'true'); // Establece un valor en localStorage
+  } else {
+    // Si cambias de #/User a otro hash y estaba en #/User
+    if (localStorage.getItem('wasUserHash') === 'true') {
+      localStorage.removeItem('wasUserHash'); // Elimina el valor de localStorage
+      window.location.reload(); // Recarga la página
+    }
+  }
+  rutas(e); // Llama a la función rutas con el evento
+  checkRolePermissions(); // Valida los permisos cada vez que cambia la vista
+
 });
 
-// Ejecutar la función rutas al cargar el documento
-$(document).ready(() => {
-  // Inicializar las rutas
-  rutas("");
+// Ejecutar al cargar la página
+$(document).ready(function() {
+  checkRolePermissions(); // Validar los permisos al cargar la vista inicial
 });
+

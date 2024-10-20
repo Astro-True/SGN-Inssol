@@ -1,6 +1,6 @@
-const { sequelize } = require('./../modelos/conexion');
+const { sequelize, Usuario, Roles } = require('./../modelos/conexion');
 
-async function iniciarSecion(req, res) {
+async function iniciarSesion(req, res) {
     const body = req.body;
 
     try {
@@ -8,7 +8,10 @@ async function iniciarSecion(req, res) {
         console.log('Credenciales recibidas:', body);
 
         const results = await sequelize.query(
-            `SELECT id, nombre FROM "Usuarios" WHERE nombre = :nombre AND contrasenia = :contrasenia`,
+            // `SELECT id, nombre FROM "Usuarios" WHERE nombre = :nombre AND contrasenia = :contrasenia`,
+            `SELECT u.id, u.nombre, r."Nombre_Rol" FROM "Usuarios" u 
+            JOIN "Roles" r ON u."RoleId" = r.id 
+            WHERE u.nombre = :nombre AND u.contrasenia = :contrasenia`,
             {
                 replacements: { nombre: body.nombre, contrasenia: body.contrasenia },
                 type: sequelize.QueryTypes.SELECT
@@ -30,7 +33,8 @@ async function iniciarSecion(req, res) {
             message: 'Éxito',
             data: {
                 id: user.id,
-                nombre: user.nombre
+                nombre: user.nombre,
+                rol: user.Nombre_Rol // Incluye el rol del usuario
             }
         });
     } catch (error) {
@@ -61,14 +65,14 @@ async function datos(req, res) {
             data: {
                 id: userData.id,
                 nombre: userData.nombre,
-                DatosPersonale: {
+                DatosPersonales: {
                     ci: userData.ci,
                     telefono: userData.telefono,
                     Correo: userData.Correo,
                     FechaNacimiento: userData.FechaNacimiento,
                     Domicilio: userData.Domicilio
                 },
-                DatosAcademico: {
+                DatosAcademicos: {
                     GradoAcademico: userData.GradoAcademico,
                     AreaEspecializacion: userData.AreaEspecializacion,
                     Grado: userData.Grado
@@ -76,11 +80,12 @@ async function datos(req, res) {
             }
         });
     } catch (error) {
+        console.error('Error al obtener los datos del usuario:', error);
         res.status(500).send({ message: "Error al obtener los datos del usuario", error: error.message });
     }
 }
 
-module.exports = { iniciarSecion, datos };
+module.exports = { iniciarSesion, datos };
 
 
 
