@@ -100,7 +100,7 @@ function rutas() {
   }
 
   // Cargar y renderizar la vista de usuarios
-  if (path === "/usuario" && !userHasPermission(userRole, 'usuario') ) {
+  if (path === "/usuario") {
     console.log("/usuario");
     changeStylesheet("AreaAdmin.css");
     loadScript("./js/view/usuario.js")
@@ -277,42 +277,43 @@ function rutas() {
 //   // Inicializar las rutas
 //   rutas("");
 // });
+
 // Define la función checkRolePermissions
-function checkRolePermissions() {
-  let userRole = sessionStorage.getItem('userRole');
+// function checkRolePermissions() {
+//   let userRole = sessionStorage.getItem('userRole');
   
-  // Verificar si es un JSON válido o un string simple
-  try {
-    userRole = JSON.parse(userRole);
-  } catch (error) {
-    console.warn('userRole no es JSON, se usará como string simple.');
-  }
+//   // Verificar si es un JSON válido o un string simple
+//   try {
+//     userRole = JSON.parse(userRole);
+//   } catch (error) {
+//     console.warn('userRole no es JSON, se usará como string simple.');
+//   }
 
-  if (!userRole) {
-    alert("No tienes permisos para acceder a esta página.");
-    window.location.hash = '/User'; // Redirigir si no hay rol
-    return;
-  }
+//   if (!userRole) {
+//     alert("No tienes permisos para acceder a esta página.");
+//     window.location.hash = '/User'; // Redirigir si no hay rol
+//     return;
+//   }
 
-  // Obtener la lista de roles y permisos desde el servidor
-  fetch(`${URL_SERVER}/Roles/lista`)
-    .then(response => response.json())
-    .then(roles => {
-      const userPermissions = roles.find(role => role.nombre === userRole);
-      if (!userPermissions) {
-        alert("Rol no encontrado.");
-        return;
-      }
-    // Configurar la visibilidad de las vistas basadas en los permisos del rol
-    if (!userPermissions.usuario) $("#usuario").hide(); // Make sure #usuario exists
-    if (!userPermissions.docente) $("#docente").hide(); // Make sure #docente exists
-    if (!userPermissions.roles) $("#roles").hide(); // Make sure #roles exists
-    if (!userPermissions.cursos) $("#cursos").hide(); // Make sure #cursos exists
-    if (!userPermissions.horarios) $("#horarios").hide(); // Make sure #horarios exists
-    if (!userPermissions.grados) $("#grados").hide(); // Make sure #grados exists
-  })
-    .catch(error => console.error("Error al obtener los permisos del rol:", error));
-}
+//   // Obtener la lista de roles y permisos desde el servidor
+//   fetch(`${URL_SERVER}/Roles/lista`)
+//     .then(response => response.json())
+//     .then(roles => {
+//       const userPermissions = roles.find(role => role.nombre === userRole);
+//       if (!userPermissions) {
+//         alert("Rol no encontrado.");
+//         return;
+//       }
+//     // Configurar la visibilidad de las vistas basadas en los permisos del rol
+//     if (!userPermissions.usuario) $("#usuario").hide(); // Make sure #usuario exists
+//     if (!userPermissions.docente) $("#docente").hide(); // Make sure #docente exists
+//     if (!userPermissions.roles) $("#roles").hide(); // Make sure #roles exists
+//     if (!userPermissions.cursos) $("#cursos").hide(); // Make sure #cursos exists
+//     if (!userPermissions.horarios) $("#horarios").hide(); // Make sure #horarios exists
+//     if (!userPermissions.grados) $("#grados").hide(); // Make sure #grados exists
+//   })
+//     .catch(error => console.error("Error al obtener los permisos del rol:", error));
+// }
 
 // Manejador de cambio de hash para llamar a rutas y validar permisos
 $(window).on('hashchange', function() {
@@ -330,7 +331,7 @@ window.addEventListener("hashchange", (e) => {
     }
   }
   rutas(e); // Llama a la función rutas con el evento
-  checkRolePermissions(); // Valida los permisos cada vez que cambia la vista
+  //checkRolePermissions(); // Valida los permisos cada vez que cambia la vista
 
 });
 
