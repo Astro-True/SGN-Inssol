@@ -44,15 +44,16 @@ function renderLoginView() {
     
     $.ajax({
         type: "POST",
-        url: "http://localhost:3000/Autenticacion/login", // Endpoint del backend que manejará el login
+        url: `${URL_SERVER}/Autenticacion/login`, // Endpoint del backend que manejará el login
         data: { nombre: usuario, contrasenia: password },
-        success: function (response) {
+        success:async function (response) {
             alert("Login exitoso");
             if (response.data) {
                 //sessionStorage.setItem('userRole', response.data.rol);
-                //sessionStorage.setItem('userRole', JSON.stringify(role));
+                //sessionStorage.setItem('userRole', JSON.stringify(response.data));
                 sessionStorage.setItem('userRole', JSON.stringify(response.data.rol));
-                console.log(sessionStorage)
+                console.log(response.data)
+                await getPerfil(response.data.id)
                     
                 // Guardar los datos del usuario en sessionStorage
                 //sessionStorage.setItem('user', JSON.stringify(response.data));
@@ -67,7 +68,64 @@ function renderLoginView() {
             alert("Error en el login: " + error.responseText);
         },
     });
+    function getPerfil(id){
+        console.log(URL_SERVER);
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                type: "GET",
+                url: `${URL_SERVER}/Autenticacion/datos/` + id,
+                //url: `${URL_SERVER}Autenticacion/datos/${dato.id}`,
+                success:  (response) => {
+                    console.log(response.data);
+                    const user = btoa(JSON.stringify(usuario));
+                    const profile=btoa(JSON.stringify(response.data));
+                    cookieManager.setCookie(user, profile, 365);
+                    console.log(profile)
+                    const User = JSON.parse(atob(profile))
+                    console.log(User);
+                    if (response.data) {
+                        sessionStorage.setItem('user', JSON.stringify(response.data));
+                        resolve(true);
+                    }else {
+                        reject(new Error("No se encontraron datos para el usuario.")); // Rechazo con un mensaje claro
+                    }
+                },
+                error: function (error) {
+                    alert("Error en el obtener de datos: " + error.responseText);
+                    reject(false)
+                    //reject(new Error("Error al obtener los datos: " + error.responseText));
+                },
+            });
+        });
+    }
 });
+
+class Cookie {
+    // Método para establecer una cookie
+    setCookie(nombre, valor, dias) {
+        let expires = "";
+        if (dias) {
+            const date = new Date();
+            date.setTime(date.getTime() + (dias * 24 * 60 * 60 * 1000)); // Convertir días a milisegundos
+            expires = `; expires=${date.toUTCString()}`;
+        }
+        document.cookie = `${nombre}=${valor || ""}${expires}; path=/`;
+    }
+
+    // Método para obtener el valor de una cookie
+    getCookieValue(nombre) {
+        const cookies = document.cookie.split(";"); // Divide la cadena de cookies en un array
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim(); // Elimina espacios en blanco al principio y al final
+            if (cookie.startsWith(nombre + "=")) {
+                return cookie.substring(nombre.length + 1); // Retorna el valor de la cookie
+            }
+        }
+        return null; // Si no se encuentra la cookie, retorna null
+    }
+}
+const cookieManager = new Cookie();
+
 
 // Manejador para el cambio de hash
 window.addEventListener("hashchange", (e) => {
@@ -82,4 +140,4 @@ window.addEventListener("hashchange", (e) => {
     }
 });
 }
- document.addEventListener('DOMContentLoaded', renderLoginView);
+document.addEventListener('DOMContentLoaded', renderLoginView);

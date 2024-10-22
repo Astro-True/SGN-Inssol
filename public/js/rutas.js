@@ -334,9 +334,17 @@ window.addEventListener("hashchange", (e) => {
   //checkRolePermissions(); // Valida los permisos cada vez que cambia la vista
 
 });
-
-// Ejecutar al cargar la página
-$(document).ready(function() {
-  checkRolePermissions(); // Validar los permisos al cargar la vista inicial
+$(document).ready(() => {
+  // Verifica si no hay hash en la URL
+  // if (!window.location.hash) {
+  //   // Si no hay hash, redirige a #/Inssol
+  //   window.location.hash = "#/Inssol";
+  // }
+  // Inicializar las rutas
+  rutas("");
 });
+// // Ejecutar al cargar la página
+// $(document).ready(function() {
+//   checkRolePermissions(); // Validar los permisos al cargar la vista inicial
+// });
 

@@ -1,3 +1,4 @@
+const { Json } = require('sequelize/lib/utils');
 const { sequelize, Usuario, Roles } = require('./../modelos/conexion');
 
 async function iniciarSesion(req, res) {
@@ -28,7 +29,7 @@ async function iniciarSesion(req, res) {
 
         // Cambiar la forma en que accedes a los resultados
         const user = results[0]; // Aquí es donde estaba el problema, ya que results es un objeto.
-
+        req.session['user']= JSON.stringify(user)
         res.send({
             message: 'Éxito',
             data: {
@@ -60,7 +61,6 @@ async function datos(req, res) {
         if (!userData) {
             return res.status(404).send({ message: "Usuario no encontrado" });
         }
-
         res.send({
             data: {
                 id: userData.id,
