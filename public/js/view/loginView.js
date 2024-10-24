@@ -53,27 +53,30 @@ function renderLoginView() {
                 //sessionStorage.setItem('userRole', JSON.stringify(response.data));
                 sessionStorage.setItem('userRole', JSON.stringify(response.data.rol));
                 console.log(response.data)
-                const token = (response.data.token);
-                await getPerfil(response.data.id);
-                cookieToken.setEncryptedCookie('Token', token,1);
-                console.log(token);
+                const tokenData = (response.data.token);
+                await getPerfil(response.data.token);
+                cookieToken.setEncryptedCookie('Token', response.data.token,1);
+                console.log(tokenData);
             }
 
             // Redirigir a la página de administración
             if (confirm('¿Deseas ir a la página de confirmación?')) {
-                window.location.href = 'AreaAdmin.html';
+                window.location.href = 'AreaAdmin.html#/inicio';
             }
         },
         error: function (error) {
             alert("Error en el login: " + error.responseText);
         },
     });
-    function getPerfil(id){
+    function getPerfil(token){
         console.log(URL_SERVER);
         return new Promise((resolve, reject) => {
             $.ajax({
                 type: "GET",
-                url: `${URL_SERVER}/Autenticacion/datos/` + id,
+                url: `${URL_SERVER}/Autenticacion/datos`,
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
                 //url: `${URL_SERVER}Autenticacion/datos/${dato.id}`,
                 success:  (response) => {
                     console.log(response.data);

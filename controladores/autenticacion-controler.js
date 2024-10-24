@@ -45,6 +45,7 @@ async function iniciarSesion(req, res) {
 }
 
 async function datos(req, res) {
+
     try {
         const [userData] = await sequelize.query(
             `SELECT u.id, u.nombre, dp.ci, dp.telefono, dp."Correo", dp."FechaNacimiento", dp."Domicilio", da."GradoAcademico", da."AreaEspecializacion", da."Grado"
@@ -53,7 +54,7 @@ async function datos(req, res) {
             LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId"
             WHERE u.id = :id`,
             {
-                replacements: { id: req.params.id },
+                replacements: { id: req.user.id },
                 type: sequelize.QueryTypes.SELECT
             }
         );

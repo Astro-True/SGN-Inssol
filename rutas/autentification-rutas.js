@@ -10,9 +10,10 @@
 // module.exports = router;
 const express = require('express');
 const { iniciarSesion, datos } = require('./../controladores/autenticacion-controler');
+const {authMiddleware} = require('../common/middleware');
 const router = express.Router();
 
 router.post('/login', iniciarSesion); // Asegúrate de que esta línea esté correcta
-router.get('/datos/:id', datos);
+router.get('/datos',authMiddleware, datos);
 
 module.exports = router;

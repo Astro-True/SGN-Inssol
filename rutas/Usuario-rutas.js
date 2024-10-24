@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const {authMiddleware} = require('../common/middleware');
 
 const {
   usuariosLista,
@@ -9,12 +10,12 @@ const {
   eliminarUsuario,
 } = require("./../controladores/Usuario-controles");
 
-router.get("/lista", usuariosLista);
-router.get("/detalle/:id", usuarioDetalle);
-router.post("/crear", usuarioCreate);
+router.get("/lista",authMiddleware, usuariosLista);
+router.get("/detalle/:id",authMiddleware, usuarioDetalle);
+router.post("/crear",authMiddleware, usuarioCreate);
 
-router.put("/actualizar/:id", actualizarUsuario);
+router.put("/actualizar/:id",authMiddleware, actualizarUsuario);
 
-router.delete("/eliminar/:id", eliminarUsuario);
+router.delete("/eliminar/:id",authMiddleware, eliminarUsuario);
 
 module.exports = router;

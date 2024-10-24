@@ -245,9 +245,9 @@ window.addEventListener("hashchange", (e) => {
   rutas(e);
 });
 $(document).ready(() => {
-  if (!window.location.hash) {
-    window.location.hash = "#/User";
-  }
+  // if (!window.location.hash) {
+  //   window.location.hash = "#/User";
+  // }
   rutas("");
 });
 
