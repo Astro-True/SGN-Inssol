@@ -53,10 +53,10 @@ function renderLoginView() {
                 //sessionStorage.setItem('userRole', JSON.stringify(response.data));
                 sessionStorage.setItem('userRole', JSON.stringify(response.data.rol));
                 console.log(response.data)
-                await getPerfil(response.data.id)
-                    
-                // Guardar los datos del usuario en sessionStorage
-                //sessionStorage.setItem('user', JSON.stringify(response.data));
+                const token = (response.data.token);
+                await getPerfil(response.data.id);
+                cookieToken.setEncryptedCookie('Token', token,1);
+                console.log(token);
             }
 
             // Redirigir a la página de administración
@@ -144,6 +144,7 @@ class Cookie {
     }
 }
 const cookieManager = new Cookie();
+const cookieToken  = new Cookie();
 
 
 // Manejador para el cambio de hash

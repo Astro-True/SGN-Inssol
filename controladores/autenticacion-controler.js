@@ -1,6 +1,6 @@
 const { Json } = require('sequelize/lib/utils');
 const { sequelize, Usuario, Roles } = require('./../modelos/conexion');
-
+const jwt = require('jsonwebtoken');
 async function iniciarSesion(req, res) {
     const body = req.body;
 
@@ -30,12 +30,12 @@ async function iniciarSesion(req, res) {
         // Cambiar la forma en que accedes a los resultados
         const user = results[0]; // Aquí es donde estaba el problema, ya que results es un objeto.
         req.session['user']= JSON.stringify(user)
+        const token = jwt.sign({ id:user.id, nombre:user.nombre, rol:user.Nombre_Rol }, 'shhhhh');
+        console.log(token);
         res.send({
             message: 'Éxito',
             data: {
-                id: user.id,
-                nombre: user.nombre,
-                rol: user.Nombre_Rol // Incluye el rol del usuario
+                token: token
             }
         });
     } catch (error) {
@@ -86,40 +86,3 @@ async function datos(req, res) {
 }
 
 module.exports = { iniciarSesion, datos };
-
-
-
-
-// const { use } = require('../rutas/Usuario-rutas');
-// const { Usuario } = require('./../modelos/conexion');
-
-// async function iniciarSecion(req, res) {
-//     const body = req.body;
-
-//     try {
-//         const user = await Usuario.findOne({
-//             where: {
-//                 nombre: body.nombre,
-//                 contrasenia: body.contrasenia
-//             },
-//         });
-
-//         if (!user) {
-//             return res.status(401).send({ message: "Usuario no permitido" });
-//         }
-
-//         res.send({ message: 'Éxito',
-//             data:{
-//                 id: user.id,
-//                 nombre:user.nombre
-//             }
-//          });
-//     } catch (error) {
-//         res.status(500).send({ message: "Error en el servidor", error: error.message });
-//     }
-// }
-// async function datos(req, res) {
-//     const user =
-// }
-
-// module.exports = { iniciarSecion };

@@ -7,6 +7,7 @@ const Historialcontraseniarutas = require("./rutas/Historialcontrasenia-rutas");
 const Rolesrutas = require("./rutas/roles-rutas");
 const AutenticacionRutas = require('./rutas/autentification-rutas')
 const cors = require("cors");
+
 const sess = {
   secret: 'keyboard cat',
   cookie: {}
