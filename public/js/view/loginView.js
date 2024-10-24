@@ -77,18 +77,22 @@ function renderLoginView() {
                 //url: `${URL_SERVER}Autenticacion/datos/${dato.id}`,
                 success:  (response) => {
                     console.log(response.data);
-                    const user = btoa(JSON.stringify(usuario));
-                    const profile=btoa(JSON.stringify(response.data));
-                    cookieManager.setCookie(user, profile, 365);
-                    console.log(profile)
-                    const User = JSON.parse(atob(profile))
-                    console.log(User);
-                    if (response.data) {
-                        sessionStorage.setItem('user', JSON.stringify(response.data));
-                        resolve(true);
-                    }else {
-                        reject(new Error("No se encontraron datos para el usuario.")); // Rechazo con un mensaje claro
-                    }
+                    // const user = btoa(JSON.stringify(usuario));
+                    // const profile=btoa(JSON.stringify(response.data));
+                    const user = JSON.stringify(usuario); // Los datos sin encriptar
+                    const profile = JSON.stringify(response.data);
+                    // Cifrar los valores usando la clase Cookie
+                    cookieManager.setEncryptedCookie('user', user, 365);
+                    cookieManager.setEncryptedCookie('profile', profile, 365);
+                    console.log("Datos cifrados guardados en cookies");
+                    const decryptedProfile = cookieManager.getDecryptedCookie('profile');
+                    console.log("Datos descifrados: ", JSON.parse(decryptedProfile));
+                if (response.data) {
+                    sessionStorage.setItem('user', JSON.stringify(response.data));
+                    resolve(true);
+                } else {
+                    reject(new Error("No se encontraron datos para el usuario."));
+                }
                 },
                 error: function (error) {
                     alert("Error en el obtener de datos: " + error.responseText);
@@ -122,6 +126,20 @@ class Cookie {
             }
         }
         return null; // Si no se encuentra la cookie, retorna null
+    }
+    // Método para cifrar y almacenar una cookie
+    setEncryptedCookie(nombre, valor, dias) {
+        const encryptedValue = btoa(valor); // Cifrar usando Base64
+        this.setCookie(nombre, encryptedValue, dias);
+    }
+
+    // Método para obtener y descifrar una cookie
+    getDecryptedCookie(nombre) {
+        const encryptedValue = this.getCookieValue(nombre);
+        if (encryptedValue) {
+            return atob(encryptedValue); // Descifrar usando Base64
+        }
+        return null;
     }
 }
 const cookieManager = new Cookie();

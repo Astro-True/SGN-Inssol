@@ -1,6 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
-//const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/InssolBD");
-const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/ejemplo");
+const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/InssolBD");
+//const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/ejemplo");
 // Sequelize('postgresql://basededatosdelsol_user:SCMg0hfV0FoBuxmRIpz0qfV6OzOCzvOU@dpg-cru1i82j1k6c73e0k7l0-a.virginia-postgres.render.com/basededatosdelsol', {
 //   dialect: 'postgres',
 //   dialectOptions: {
