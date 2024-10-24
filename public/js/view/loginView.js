@@ -82,8 +82,8 @@ function renderLoginView() {
                     const user = JSON.stringify(usuario); // Los datos sin encriptar
                     const profile = JSON.stringify(response.data);
                     // Cifrar los valores usando la clase Cookie
-                    cookieManager.setEncryptedCookie('user', user, 365);
-                    cookieManager.setEncryptedCookie('profile', profile, 365);
+                    cookieManager.setEncryptedCookie('user', user, 1);
+                    cookieManager.setEncryptedCookie('profile', profile, 1);
                     console.log("Datos cifrados guardados en cookies");
                     const decryptedProfile = cookieManager.getDecryptedCookie('profile');
                     console.log("Datos descifrados: ", JSON.parse(decryptedProfile));
@@ -131,6 +131,7 @@ class Cookie {
     setEncryptedCookie(nombre, valor, dias) {
         const encryptedValue = btoa(valor); // Cifrar usando Base64
         this.setCookie(nombre, encryptedValue, dias);
+        console.log(encryptedValue);
     }
 
     // Método para obtener y descifrar una cookie
