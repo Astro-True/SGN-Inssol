@@ -130,23 +130,28 @@ function cargarDatosEnTabla(datos) {
 function obtenerDatos() {
     // URL del servidor donde se obtienen los datos
     const url = `${URL_SERVER}/Usuario/lista`;
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al obtener los datos');
-            }
-            // Convierte la respuesta en un JSON
-            return response.json();
-        })
-        .then(datos => {
+
+    // Obtener el token de la cookie
+    const token = cookieManager.getDecryptedCookie(TOKEN);
+    
+
+    $.ajax({
+        url: url,
+        type: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`, // Enviar el token en el encabezado
+            "Content-Type": "application/json"
+        },
+        success: function(datos) {
             // Llama a la función para cargar los datos en la tabla
             cargarDatosEnTabla(datos);
-        })
-        .catch(error => {
-            console.error('Hubo un problema con la solicitud:', error);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Hubo un problema con la solicitud:', errorThrown);
             // Muestra un error en el DOM si falla
             document.getElementById('view-container').innerHTML = '<p>Error al cargar los datos.</p>';
-        });
+        }
+    });
 }
 // Carga la vista de usuarios una vez que el DOM está completamente cargado
 document.addEventListener('DOMContentLoaded', renderDocente);

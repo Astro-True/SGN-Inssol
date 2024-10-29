@@ -28,6 +28,18 @@ function renderInicio() {
             window.location.hash = ruta; // Cambiar la ruta en el hash
         });
     });
+    // Evento para el botón "Actualizar", recarga la vista actual de usuarios
+    document.getElementById('btn-Actualizar').addEventListener('click', function () {
+        // Llama de nuevo a la función para refrescar la vista
+        renderUsuario();
+    });
+    // Evento para el botón "Añadir", cambia la URL para la vista de agregar usuario
+    document.getElementById('btn-agregar').addEventListener('click', function () {
+        // Obtiene la vista desde el atributo data-view
+        const ruta = this.getAttribute('data-view');
+        // Cambia la ruta del hash en la URL
+        window.location.hash = ruta;
+    });
     obtenerDatos();
 }
 function cargarDatosEnTabla(datos) {
@@ -45,35 +57,65 @@ function cargarDatosEnTabla(datos) {
         btnEditar.textContent = 'Editar';
         btnEditar.className = 'btn-editar';
         btnEditar.onclick = function () {
-            alert('Editar ' + dato.nombre);
+            // Redirige a la vista de edición del usuario con su ID
+            window.location.hash = `/Usuario/Editar/?idUsuario=${dato.id}`;
         };
+        // Botón de eliminar
         let btnEliminar = document.createElement('button');
         btnEliminar.textContent = 'Eliminar';
         btnEliminar.className = 'btn-eliminar';
         btnEliminar.onclick = function () {
-            alert('Eliminar ' + dato.nombre);
+            // Confirmación para eliminar al usuario
+            if (confirm(`¿Estás seguro de que quieres eliminar a ${dato.nombre}?`)) {
+                const url = `${URL_SERVER}/Usuario/eliminar/${dato.id}`;
+                const token = cookieManager.getDecryptedCookie(TOKEN);
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    success: function(result) {
+                        alert('Usuario eliminado correctamente');
+                        // Recarga los datos de la tabla después de eliminar
+                        obtenerDatos();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Hubo un problema al eliminar el usuario:', textStatus, errorThrown);
+                        alert('Error al eliminar el usuario');
+                    }
+                });
+            }
+            
         };
         celdaAcciones.appendChild(btnEditar);
         celdaAcciones.appendChild(btnEliminar);
     });
 }
-// Función para obtener los datos desde el host remoto
 function obtenerDatos() {
+    // URL del servidor donde se obtienen los datos
     const url = `${URL_SERVER}/Usuario/lista`;
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al obtener los datos');
-            }
-            return response.json();
-        })
-        .then(datos => {
+
+    // Obtener el token de la cookie
+    const token = cookieManager.getDecryptedCookie(TOKEN);
+    $.ajax({
+        url: url,
+        type: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`, // Enviar el token en el encabezado
+            "Content-Type": "application/json"
+        },
+        success: function(datos) {
+            // Llama a la función para cargar los datos en la tabla
             cargarDatosEnTabla(datos);
-        })
-        .catch(error => {
-            console.error('Hubo un problema con la solicitud:', error);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Hubo un problema con la solicitud:', errorThrown);
+            // Muestra un error en el DOM si falla
             document.getElementById('view-container').innerHTML = '<p>Error al cargar los datos.</p>';
-        });
+        }
+    });
 }
 function mostrarCargando() {
     const tabla = document.getElementById('datos-tabla').getElementsByTagName('tbody')[0];

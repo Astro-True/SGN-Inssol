@@ -1,4 +1,3 @@
-
 // Función principal para renderizar la vista de usuarios
 function renderUsuario() {
     // Selecciona el contenedor principal donde se mostrará la tabla
@@ -54,7 +53,6 @@ function renderUsuario() {
     // Llama a la función para obtener los datos de los usuarios
     obtenerDatos();
 }
-
 // Función para cargar los datos de usuarios en la tabla
 function cargarDatosEnTabla(datos) {
     // Selecciona el cuerpo de la tabla
@@ -93,25 +91,27 @@ function cargarDatosEnTabla(datos) {
         btnEliminar.onclick = function () {
             // Confirmación para eliminar al usuario
             if (confirm(`¿Estás seguro de que quieres eliminar a ${dato.nombre}?`)) {
-                fetch(`${URL_SERVER}/Usuario/eliminar/${dato.id}`, {
-                    method: 'DELETE'
-                })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Error al eliminar el usuario');
-                        }
-                        return response.json();
-                    })
-                    .then(result => {
+                const url = `${URL_SERVER}/Usuario/eliminar/${dato.id}`;
+                const token = cookieManager.getDecryptedCookie(TOKEN);
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    success: function(result) {
                         alert('Usuario eliminado correctamente');
                         // Recarga los datos de la tabla después de eliminar
                         obtenerDatos();
-                    })
-                    .catch(error => {
-                        console.error('Hubo un problema al eliminar el usuario:', error);
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Hubo un problema al eliminar el usuario:', textStatus, errorThrown);
                         alert('Error al eliminar el usuario');
-                    });
+                    }
+                });
             }
+            
         };
         // Añade el botón de editar, eliminar a la celda
         celdaAcciones.appendChild(btnEditar);
@@ -119,12 +119,8 @@ function cargarDatosEnTabla(datos) {
     });
 }
 function obtenerDatos() {
-    // URL del servidor donde se obtienen los datos
     const url = `${URL_SERVER}/Usuario/lista`;
-
-    // Obtener el token de la cookie
-    const token = cookieManager.getDecryptedCookie("token");
-
+    const token = cookieManager.getDecryptedCookie(TOKEN);
     $.ajax({
         url: url,
         type: "GET",
@@ -143,65 +139,4 @@ function obtenerDatos() {
         }
     });
 }
-
-
-
-
-// Carga la vista de usuarios una vez que el DOM está completamente cargado
 document.addEventListener('DOMContentLoaded', renderUsuario);
-
-// // Función para obtener los datos desde el servidor
-// function obtenerDatos() {
-//     // URL del servidor donde se obtienen los datos
-//     const url = `${URL_SERVER}/Usuario/lista`;
-//     fetch(url)
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('Error al obtener los datos');
-//             }
-//             // Convierte la respuesta en un JSON
-//             return response.json();
-//         })
-//         .then(datos => {
-//             // Llama a la función para cargar los datos en la tabla
-//             cargarDatosEnTabla(datos);
-//         })
-//         .catch(error => {
-//             console.error('Hubo un problema con la solicitud:', error);
-//             // Muestra un error en el DOM si falla
-//             document.getElementById('view-container').innerHTML = '<p>Error al cargar los datos.</p>';
-//         });
-// }
-// Función para obtener los datos desde el servidor
-// function obtenerDatos() {
-//     // URL del servidor donde se obtienen los datos
-//     const url = `${URL_SERVER}/Usuario/lista`;
-
-//     // Obtener el token de la cookie
-//     const token = cookieManager.getDecryptedCookie("token");
-
-//     fetch(url, {
-//         method: "GET",
-//         headers: {
-//             "Authorization": `Bearer ${token}`, // Enviar el token en el encabezado
-//             "Content-Type": "application/json"
-//         }
-//     })
-//         .then(response => {
-//             if (!response.ok) {
-//                 throw new Error('Error al obtener los datos');
-//             }
-//             // Convierte la respuesta en un JSON
-//             return response.json();
-//         })
-//         .then(datos => {
-//             // Llama a la función para cargar los datos en la tabla
-//             cargarDatosEnTabla(datos);
-//         })
-//         .catch(error => {
-//             console.error('Hubo un problema con la solicitud:', error);
-//             // Muestra un error en el DOM si falla
-//             document.getElementById('view-container').innerHTML = '<p>Error al cargar los datos.</p>';
-//         });
-// }
-// Función para obtener los datos desde el servidor usando AJAX
