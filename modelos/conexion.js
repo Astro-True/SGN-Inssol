@@ -1,7 +1,6 @@
 const { Sequelize, DataTypes } = require("sequelize");
-const sequelize = new Sequelize(
-  "postgres://postgres:12345@localhost:5432/postgres"
-); // Example for postgres
+//const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/InssolBD");
+const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/ejemplo");
 // Sequelize('postgresql://basededatosdelsol_user:SCMg0hfV0FoBuxmRIpz0qfV6OzOCzvOU@dpg-cru1i82j1k6c73e0k7l0-a.virginia-postgres.render.com/basededatosdelsol', {
 //   dialect: 'postgres',
 //   dialectOptions: {
@@ -11,6 +10,7 @@ const sequelize = new Sequelize(
 //     }
 //   }
 // })
+//const sequelize = new Sequelize('postgres://postgres:12345@localhost:5432/ejemplo');
 
 const Usuario = sequelize.define("Usuario", {
   nombre: {
@@ -75,9 +75,39 @@ const Roles = sequelize.define("Roles", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  Usuario:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Docente:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Roles:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Cursos:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Horarios:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  Grados:{
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
 });
-Usuario.belongsToMany(Roles, { through: "RolUsuario" });
-Roles.belongsToMany(Usuario, { through: "RolUsuario" });
+Roles.hasMany(Usuario );
+Usuario.hasOne(Roles,);
 
 Usuario.hasMany(HistorialContrasenia);
 HistorialContrasenia.belongsTo(Usuario);
@@ -87,17 +117,26 @@ DatosAcademicos.belongsTo(Usuario);
 
 Usuario.hasOne(DatosPersonales);
 DatosPersonales.belongsTo(Usuario);
-
 async function probarconnexion() {
   try {
+    await sequelize.authenticate();
+    console.log("Conexión establecida correctamente.");
+
+        // Sincronización de tablas (esto eliminará y recreará las tablas si existen)
     await sequelize.sync({ force: true });
-    sequelize.authenticate();
-    console.log("Connection has been established successfully.");
+    console.log("Tablas sincronizadas correctamente (si existían, se han eliminado y recreado).");
+    // Inserción de roles predeterminados
+    await Roles.bulkCreate([
+      { Nombre_Rol: "Administrador", Usuario: true, Docente: true, Roles: true, Cursos: true, Horarios: true, Grados: true },
+      { Nombre_Rol: "Docente", Usuario: false, Docente: false, Roles: false, Cursos: false, Horarios: false, Grados: false },
+      { Nombre_Rol: "Estudiante", Usuario: false, Docente: false, Roles: false, Cursos: false, Horarios: false, Grados: false },
+    ]);
+    console.log("Roles predeterminados insertados correctamente.");
+    
   } catch (error) {
-    console.error("Unable to connect to the database:", error);
+    console.error("No se pudo conectar a la base de datos:", error);
   }
 }
-
 module.exports = {
   probarconnexion,
   sequelize,

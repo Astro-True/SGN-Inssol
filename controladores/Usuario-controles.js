@@ -7,7 +7,11 @@ async function usuariosLista(req, res) {
     const [usuarios] = await sequelize.query(`
     SELECT
       u.id,
-      u.nombre, 
+      u.nombre,
+      u."createdAt",
+      u."updatedAt",
+      u."RoleId",
+      r."Nombre_Rol",
       dp.ci, 
       dp.telefono, 
       dp."Correo", 
@@ -18,15 +22,20 @@ async function usuariosLista(req, res) {
       da."Grado"
     FROM "Usuarios" u
     LEFT JOIN "DatosPersonales" dp ON u.id = dp."UsuarioId"
-    LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId";
+    LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId"
+    LEFT JOIN "Roles" r ON u."RoleId"= r."id";
 
         `);
     const usuariosEstructurados = usuarios.map((usuario) => ({
       id: usuario.id,
       nombre: usuario.nombre,
       contrasenia: usuario.contrasenia,
-      createdAt: usuario.createdAt, // Asegúrate de incluir esta columna si está en la consulta
-      updatedAt: usuario.updatedAt, // Asegúrate de incluir esta columna si está en la consulta
+       createdAt: usuario.createdAt ? new Date(usuario.createdAt).toISOString() : null, // Verifica y formatea createdAt
+       updatedAt: usuario.updatedAt ? new Date(usuario.updatedAt).toISOString() : null, // Verifica y formatea updatedAt
+      roleid: usuario.RoleId,
+      Roles: {
+        Nombre_Rol: usuario.Nombre_Rol,
+      },
       DatosPersonale: {
         ci: usuario.ci,
         telefono: usuario.telefono,
@@ -39,6 +48,7 @@ async function usuariosLista(req, res) {
         AreaEspecializacion: usuario.AreaEspecializacion,
         Grado: usuario.Grado,
       },
+      
     }));
 
     console.log(usuariosEstructurados);
@@ -63,13 +73,14 @@ async function usuarioCreate(req, res) {
       gradoacademico,
       areaespecializacion,
       grado,
+      roleid,
     } = req.body;
 
     // Transacción para garantizar que los tres inserts se realicen correctamente
     await sequelize.transaction(async (t) => {
       const [usuario] = await sequelize.query(
-        `INSERT INTO "Usuarios" (nombre, contrasenia, "createdAt", "updatedAt") VALUES (?, ?,now(),now()) RETURNING id`,
-        { replacements: [nombre, contrasenia], transaction: t }
+        `INSERT INTO "Usuarios" (nombre, contrasenia, "RoleId", "createdAt", "updatedAt") VALUES (?, ?, ?, now(),now()) RETURNING id`,
+        { replacements: [nombre, contrasenia,roleid], transaction: t }
       );
       const usuarioId = usuario[0].id;
 
@@ -120,13 +131,17 @@ async function actualizarUsuario(req, res) {
       gradoacademico,
       areaespecializacion,
       grado,
+      roleid,
     } = req.body;
+    if (!roleid) {
+      return res.status(400).send({ message: 'El rol es obligatorio' });
+  }
 
     // Transacción para garantizar que todas las actualizaciones se realicen correctamente
     await sequelize.transaction(async (t) => {
       await sequelize.query(
-        `UPDATE "Usuarios" SET nombre = ?, contrasenia = ? WHERE id = ?`,
-        { replacements: [nombre, contrasenia, idParams], transaction: t }
+        `UPDATE "Usuarios" SET nombre = ?, contrasenia = ?, "RoleId" = ? WHERE id = ?`,
+        { replacements: [nombre, contrasenia, roleid, idParams], transaction: t }
       );
       await sequelize.query(
         `UPDATE "DatosPersonales" SET ci = ?, telefono = ?, "Correo" = ?, "FechaNacimiento" = ?, "Domicilio" = ? 
@@ -163,7 +178,7 @@ async function actualizarUsuario(req, res) {
 async function usuarioDetalle(req, res) {
   const usuarioId = req.params.id;
   try {
-      const [usuario] = await sequelize.query(`
+    const [usuario] = await sequelize.query(`
       SELECT
           u.id,
           u.nombre,
@@ -175,40 +190,42 @@ async function usuarioDetalle(req, res) {
           dp."Domicilio",
           da."GradoAcademico", 
           da."AreaEspecializacion", 
-          da."Grado"
+          da."Grado",
+          u."RoleId"
       FROM "Usuarios" u
       LEFT JOIN "DatosPersonales" dp ON u.id = dp."UsuarioId"
       LEFT JOIN "DatosAcademicos" da ON u.id = da."UsuarioId"
       WHERE u.id = ?;
       `, {
-          replacements: [usuarioId]
-      });
+      replacements: [usuarioId]
+    });
 
-      if (usuario.length > 0) {
-          const usuarioEstructurado = {
-              id: usuario[0].id,
-              nombre: usuario[0].nombre,
-              contrasenia: usuario[0].contrasenia,
-              DatosPersonale: {
-                  ci: usuario[0].ci,
-                  telefono: usuario[0].telefono,
-                  Correo: usuario[0].Correo,
-                  FechaNacimiento: usuario[0].FechaNacimiento,
-                  Domicilio: usuario[0].Domicilio
-              },
-              DatosAcademico: {
-                  GradoAcademico: usuario[0].GradoAcademico,
-                  AreaEspecializacion: usuario[0].AreaEspecializacion,
-                  Grado: usuario[0].Grado
-              }
-          };
-          res.send(usuarioEstructurado);
-      } else {
-          res.status(404).send({ message: 'Usuario no encontrado' });
-      }
+    if (usuario.length > 0) {
+      const usuarioEstructurado = {
+        id: usuario[0].id,
+        nombre: usuario[0].nombre,
+        contrasenia: usuario[0].contrasenia,
+        roleid: usuario[0].RoleId,
+        DatosPersonale: {
+          ci: usuario[0].ci,
+          telefono: usuario[0].telefono,
+          Correo: usuario[0].Correo,
+          FechaNacimiento: usuario[0].FechaNacimiento,
+          Domicilio: usuario[0].Domicilio
+        },
+        DatosAcademico: {
+          GradoAcademico: usuario[0].GradoAcademico,
+          AreaEspecializacion: usuario[0].AreaEspecializacion,
+          Grado: usuario[0].Grado
+        }
+      };
+      res.send(usuarioEstructurado);
+    } else {
+      res.status(404).send({ message: 'Usuario no encontrado' });
+    }
   } catch (error) {
-      console.error("Error al obtener los detalles del usuario:", error);
-      res.status(500).send({ message: "Error al obtener los detalles del usuario" });
+    console.error("Error al obtener los detalles del usuario:", error);
+    res.status(500).send({ message: "Error al obtener los detalles del usuario" });
   }
 }
 

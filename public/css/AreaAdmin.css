@@ -45,7 +45,7 @@ header {
     margin: auto;
     display: flex;
     height: 58px;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     align-items: center;
     color: #fff;
     width: 100%;
@@ -79,6 +79,50 @@ header {
     display: none;
     font-size: 25px;
 }
+.User{
+    position: sticky;
+    top: centered;
+    left: calc(100% - 200px);
+    border: #000;
+    /*background-color: #2b09eb;*/
+    height: 70%;
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    border: #000 solid 1px;
+    cursor: pointer;
+}
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+/* .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #e3e1de;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #F44336;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+} */
+
 /* ***FIN HEADER*** */
 
 
@@ -132,6 +176,7 @@ a {
     position: relative;
     top: 1px;
 }
+
 .myButton.active {
     box-shadow: 8px 11px 11px -7px #030303c4;
     background: #ffd9a3;
@@ -160,6 +205,7 @@ a {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     height: 100%;
 }
+
 /* ***FIN SIDEBAR*** */
 
 /* ***** */
@@ -214,24 +260,18 @@ table th {
     height: 15px;
 }
 
-#form-container {
-    display: none;
-    /* Ocultar el formulario inicialmente */
-    margin-top: 20px;
-}
-
 .form-group {
     margin-bottom: 10px;
 }
 
-#fondoAdmin{
+#fondoAdmin {
     height: calc(100% - 100px);
     border-radius: 50%;
     margin-left: 20%;
     margin-top: 2%;
     opacity: 10%;
     position: absolute;
-} 
+}
 
 /* ***FIN MAIN*** */
 
@@ -243,6 +283,7 @@ footer {
     background-color: #ccc;
     padding: 5px;
 }
+
 /* ***FIN FOOTER*** */
 
 /* ******** */
@@ -273,29 +314,13 @@ footer {
     height: auto;
     min-height: calc(100% - 41px);
 }
+
 /* ***FIN RESPONSE*** */
 
 /* ******* */
 /* BOTONES */
 /* ******* */
-.btn-editar{
-   max-width: 100px;
-   width: 80px;
-   height: 25px;
-   border: none;
-   margin: 3px;
-   color: black;
-   cursor: pointer;
-   border-radius: 5px;
-   background-color: white;
-   border: 1px solid #ff9800;
-}
-.btn-editar:hover{
-    background: #e68a00;
-    color: white;
-}
-
-.btn-eliminar{
+.btn-editar {
     max-width: 100px;
     width: 80px;
     height: 25px;
@@ -307,10 +332,30 @@ footer {
     background-color: white;
     border: 1px solid #ff9800;
 }
-.btn-eliminar:hover{
+
+.btn-editar:hover {
     background: #e68a00;
     color: white;
 }
+
+.btn-eliminar {
+    max-width: 100px;
+    width: 80px;
+    height: 25px;
+    border: none;
+    margin: 3px;
+    color: black;
+    cursor: pointer;
+    border-radius: 5px;
+    background-color: white;
+    border: 1px solid #ff9800;
+}
+
+.btn-eliminar:hover {
+    background: #e68a00;
+    color: white;
+}
+
 .Add-Update {
     box-shadow: 8px 11px 11px -7px #030303c4;
     background: linear-gradient(to bottom, #fdfcfc 5%, #e7e9e9 100%);
@@ -350,24 +395,28 @@ footer {
 /* FORMULARIO */
 /* ********** */
 #view-container.agregar-active {
-    
+
     background-position: center center;
     background-repeat: no-repeat;
     background-size: calc(55% - 41px);
     /*background-color: rgba(255, 255, 255, 0.8);*/
-    overflow: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
     padding: 10px;
     display: grid;
     align-content: center;
     height: 100%;
 }
+
 .content-agregar {
     width: 100%;
     display: flex;
     justify-content: end;
     align-items: end;
 }
-#btn-agregar, #btn-Actualizar {
+
+#btn-agregar,
+#btn-Actualizar {
     text-align: center;
     margin-top: 5px;
     width: 10%;
@@ -378,7 +427,7 @@ footer {
 }
 
 #form-container {
-    background:linear-gradient(136deg, rgba(167, 198, 238, 0.67) 28%, rgba(214, 213, 213, 0.67)50%, rgba(244, 203, 153, 0.67)75%)  ;
+    background: linear-gradient(136deg, rgba(167, 198, 238, 0.67) 28%, rgba(214, 213, 213, 0.67)50%, rgba(244, 203, 153, 0.67)75%);
     border: 1mm ridge rgba(226, 227, 215, 0.6);
     padding: 20px;
     margin: 100px auto;
@@ -389,7 +438,7 @@ footer {
     margin: auto;
 }
 
-#form-container input{
+#form-container input {
     width: 100%;
     padding: 10px;
     margin-bottom: 10px;
@@ -401,7 +450,7 @@ footer {
 
 .btn-form {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -410,4 +459,42 @@ footer {
     align-items: center;
     margin-bottom: 10px;
 }
+
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+
+.button-28 {
+    background-color: transparent;
+    border-radius: 15px;
+    color: #000;
+    cursor: pointer;
+    font-size: 16px;
+    padding: 6px;
+    text-decoration: none;
+    width: 30%;
+}
+
+.button-28:disabled {
+    pointer-events: none;
+}
+
+.button-28:hover {
+    color: #fff;
+    background-color: #ffa500;
+    box-shadow: rgba(0, 0, 0, 0.25) 0 8px 15px;
+    transform: translateY(-2px);
+}
+
+.button-28:active {
+    box-shadow: none;
+    transform: translateY(0);
+}
+
 /* ***FIN fORMULARIO*** */

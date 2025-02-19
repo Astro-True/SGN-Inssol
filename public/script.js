@@ -56,44 +56,6 @@ document.addEventListener('DOMContentLoaded', function () {
         window.location.href = './recuperar.html';
     });
 
-    
-    //obligacion de llenado de campo obligatorio
-/*
-    document.getElementById('btn-ingresar')?.addEventListener('click', function (event) {
-        const username = document.getElementById('form-usuario')?.value.trim();
-        const password = document.getElementById('form-password')?.value.trim();
-
-        if (!username || !password) {
-            event.preventDefault(); // Evitar el envío del formulario
-            alert('Por favor, complete todos los campos obligatorios: Usuario y Contraseña.');
-        }
-    });
-
-    // Validar formulario de correo electrónico
-    document.getElementById('btn-rcpr-true')?.addEventListener('click', function (event) {
-        const email = document.getElementById('email')?.value.trim();
-
-        if (!email) {
-            event.preventDefault(); // Evitar el envío del formulario
-            alert('Por favor, ingrese su correo electrónico.');
-
-        }
-    });
-
-    // Validar formulario de nueva contraseña y repetición
-    document.getElementById('btn-confi-true')?.addEventListener('click', function (event) {
-        const newPassword = document.getElementById('new-password')?.value.trim();
-        const repeatPassword = document.getElementById('repeat-password')?.value.trim();
-
-        if (!newPassword || !repeatPassword) {
-            event.preventDefault(); // Evitar el envío del formulario
-            alert('Por favor, ingrese y repita su nueva contraseña.');
-        } else if (newPassword !== repeatPassword) {
-            event.preventDefault(); // Evitar el envío del formulario
-            alert('Las contraseñas no coinciden.');
-        }
-    });
-*/
     function showCustomAlert(message) {
         const alertBox = document.getElementById('custom-alert');
         const alertMessage = document.getElementById('alert-message');

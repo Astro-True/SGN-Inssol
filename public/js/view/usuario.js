@@ -1,6 +1,10 @@
+// Función principal para renderizar la vista de usuarios
 function renderUsuario() {
+    // Selecciona el contenedor principal donde se mostrará la tabla
     const container = $("#view-container");
+    // Limpia cualquier contenido previo en el contenedor
     container.empty();
+    // Estructura HTML para la tabla de usuarios y los botones de actualizar y añadir
     const tablaHTML = `
     <div class=content-agregar>
     <div class="Add-Update" data-view="Usuario" id=btn-Actualizar>Actualizar</div>
@@ -23,192 +27,116 @@ function renderUsuario() {
         </table>
         <div class="content"></div>
     `;
+    // Agrega el HTML generado al contenedor
     container.append(tablaHTML);
+    // Añade eventos a los botones con clase 'myButton'
     document.querySelectorAll('.myButton').forEach(button => {
         button.addEventListener('click', function () {
-            const ruta = button.getAttribute('data-view');
-            window.location.hash = ruta; // Cambiar la ruta en el hash
-        });
-    });
-        // Añadir evento al botón de "Actualizar"
-        document.getElementById('btn-Actualizar').addEventListener('click', function() {
-            // Refresca la vista del usuario
-            renderUsuario(); 
-        });
-    
-        // Añadir evento al botón de "Añadir"
-        document.getElementById('btn-agregar').addEventListener('click', function() {
-            const ruta = this.getAttribute('data-view');
+            // Obtiene la vista desde el atributo data-view
+            const ruta = button.getAttribute('data-view'); 
+            // Cambia la ruta del hash en la URL
             window.location.hash = ruta;
         });
-    
-        obtenerDatos();
-    // Configurar el botón "Añadir"
-    // document.getElementById("bt-anadir").addEventListener("click", function () {
-    //     configurarFormulario(); // Mostrar el formulario de agregar
-    // });
+    });
+    // Evento para el botón "Actualizar", recarga la vista actual de usuarios
+    document.getElementById('btn-Actualizar').addEventListener('click', function () {
+        // Llama de nuevo a la función para refrescar la vista
+        renderUsuario();
+    });
+    // Evento para el botón "Añadir", cambia la URL para la vista de agregar usuario
+    document.getElementById('btn-agregar').addEventListener('click', function () {
+        // Obtiene la vista desde el atributo data-view
+        const ruta = this.getAttribute('data-view');
+        // Cambia la ruta del hash en la URL
+        window.location.hash = ruta;
+    });
+    // Llama a la función para obtener los datos de los usuarios
     obtenerDatos();
 }
+// Función para cargar los datos de usuarios en la tabla
 function cargarDatosEnTabla(datos) {
+    // Selecciona el cuerpo de la tabla
     const tabla = document.getElementById('datos-tabla').getElementsByTagName('tbody')[0];
+    // Ordena los usuarios por nombre
     datos.sort((a, b) => a.nombre.localeCompare(b.nombre));
+    // Limpia la tabla antes de agregar los nuevos datos
     tabla.innerHTML = '';
+    // Itera sobre los datos de los usuarios
     datos.forEach(dato => {
+        // Inserta una nueva fila en la tabla
         let fila = tabla.insertRow();
+        // Añade la celda con el nombre del usuario, ci, telefono, correo domicilio
         fila.insertCell(0).textContent = dato.nombre || 'N/A';
         fila.insertCell(1).textContent = dato.DatosPersonale.ci;
         fila.insertCell(2).textContent = dato.DatosPersonale.telefono;
         fila.insertCell(3).textContent = dato.DatosPersonale.Correo;
+        // Convierte la fecha de nacimiento a formato local
         fila.insertCell(4).textContent = new Date(dato.DatosPersonale.FechaNacimiento).toLocaleDateString();
         fila.insertCell(5).textContent = dato.DatosPersonale.Domicilio;
-        // fila.insertCell(0).textContent = dato.nombre || 'N/A';
-        // fila.insertCell(1).textContent = dato.ci;
-        // fila.insertCell(2).textContent = dato.telefono;
-        // fila.insertCell(3).textContent = dato.Correo;
-        // fila.insertCell(4).textContent = new Date(dato.FechaNacimiento).toLocaleDateString();
-        // fila.insertCell(5).textContent = dato.Domicilio;
+        
+        // Crea las acciones de editar y eliminar en la última celda
         let celdaAcciones = fila.insertCell(6);
+        // Botón de editar
         let btnEditar = document.createElement('button');
         btnEditar.textContent = 'Editar';
         btnEditar.className = 'btn-editar';
         btnEditar.onclick = function () {
+            // Redirige a la vista de edición del usuario con su ID
             window.location.hash = `/Usuario/Editar/?idUsuario=${dato.id}`;
-            // configurarFormularioActualizar();
         };
+        // Botón de eliminar
         let btnEliminar = document.createElement('button');
         btnEliminar.textContent = 'Eliminar';
         btnEliminar.className = 'btn-eliminar';
         btnEliminar.onclick = function () {
+            // Confirmación para eliminar al usuario
             if (confirm(`¿Estás seguro de que quieres eliminar a ${dato.nombre}?`)) {
-                fetch(`${URL_SERVER}/Usuario/eliminar/${dato.id}`, {
-                    method: 'DELETE'
-                })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Error al eliminar el usuario');
+                const url = `${URL_SERVER}/Usuario/eliminar/${dato.id}`;
+                const token = cookieManager.getDecryptedCookie(TOKEN);
+                $.ajax({
+                    url: url,
+                    type: 'DELETE',
+                    headers: {
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
+                    },
+                    success: function(result) {
+                        alert('Usuario eliminado correctamente');
+                        // Recarga los datos de la tabla después de eliminar
+                        obtenerDatos();
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Hubo un problema al eliminar el usuario:', textStatus, errorThrown);
+                        alert('Error al eliminar el usuario');
                     }
-                    return response.json();
-                })
-                .then(result => {
-                    alert('Usuario eliminado correctamente');
-                    obtenerDatos(); // Volver a cargar los datos en la tabla después de eliminar
-                })
-                .catch(error => {
-                    console.error('Hubo un problema al eliminar el usuario:', error);
-                    alert('Error al eliminar el usuario');
                 });
             }
+            
         };
-        
-        // let btnAñadir = document.createElement('button');
-        // btnAñadir.textContent = 'Añadir';
-        // btnAñadir.id = 'btn-añadir';
-        // btnAñadir.onclick = function () {
-        //     configurarFormulario();
-        // };
+        // Añade el botón de editar, eliminar a la celda
         celdaAcciones.appendChild(btnEditar);
         celdaAcciones.appendChild(btnEliminar);
-        // celdaAcciones.appendChild(btnAñadir);
     });
 }
-// Función para obtener los datos desde el host remoto
 function obtenerDatos() {
     const url = `${URL_SERVER}/Usuario/lista`;
-    fetch(url)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error al obtener los datos');
-            }
-            return response.json();
-        })
-        .then(datos => {
+    const token = cookieManager.getDecryptedCookie(TOKEN);
+    $.ajax({
+        url: url,
+        type: "GET",
+        headers: {
+            "Authorization": `Bearer ${token}`, // Enviar el token en el encabezado
+            "Content-Type": "application/json"
+        },
+        success: function(datos) {
+            // Llama a la función para cargar los datos en la tabla
             cargarDatosEnTabla(datos);
-        })
-        .catch(error => {
-            console.error('Hubo un problema con la solicitud:', error);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            console.error('Hubo un problema con la solicitud:', errorThrown);
+            // Muestra un error en el DOM si falla
             document.getElementById('view-container').innerHTML = '<p>Error al cargar los datos.</p>';
-        });
-}
-function configurarFormulario() {
-    // Mostrar el formulario cuando se hace clic en "Añadir"
-    document.getElementById("form-container").style.display = "block";
-    document.getElementById("view-container").style.display = "none";
-    // Ocultar el formulario cuando se hace clic en "Cancelar"
-    document.getElementById("cancelar").addEventListener("click", function () {
-        document.getElementById("form-container").style.display = "none";
-        document.getElementById("view-container").style.display = "block";
-    });
-    // Manejar el envío del formulario
-    document.getElementById("add-form").addEventListener("submit", function (event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        const data = {};
-        // Convertir el formulario a un objeto
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-        fetch(`${URL_SERVER}/Usuario/crear`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then(result => {
-                alert('Usuario agregado exitosamente');
-                document.getElementById("form-container").style.display = "none";
-                document.getElementById("add-form").reset();
-                obtenerDatos(); // Volver a cargar los datos
-                document.getElementById("view-container").style.display = "block";
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al agregar el usuario');
-            });
-        document.getElementById("view-container").style.display = "block";
+        }
     });
 }
-function configurarFormularioActualizar(dato) {
-    document.getElementById("form-container").style.display = "block";
-    document.getElementById("view-container").style.display = "none";
-    document.getElementById("nombre").value = dato.nombre;
-    document.getElementById("ci").value = dato.DatosPersonale.ci;
-    document.getElementById("telefono").value = dato.DatosPersonale.telefono;
-    document.getElementById("correo").value = dato.DatosPersonale.Correo;
-    document.getElementById("fechanacimiento").value = dato.DatosPersonale.FechaNacimiento;
-    document.getElementById("domicilio").value = dato.DatosPersonale.Domicilio;
-    document.getElementById("gradoacademico").value = dato.DatosAcademico.GradoAcademico;
-    document.getElementById("areaespecializacion").value = dato.DatosAcademico.AreaEspecializacion;
-    document.getElementById("grado").value = dato.DatosAcademico.Grado;
-    document.getElementById("add-form").onsubmit = function (event) {
-        event.preventDefault();
-        const formData = new FormData(this);
-        const data = {};
-        formData.forEach((value, key) => {
-            data[key] = value;
-        });
-        fetch(`${URL_SERVER}/Usuario/actualizar/${dato.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-            .then(response => response.json())
-            .then(result => {
-                alert('Usuario actualizado exitosamente');
-                document.getElementById("form-container").style.display = "none";
-                document.getElementById("add-form").reset();
-                obtenerDatos(); // Volver a cargar los datos
-                document.getElementById("view-container").style.display = "block";
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Hubo un error al actualizar el usuario');
-            });
-    };
-}
-
-
 document.addEventListener('DOMContentLoaded', renderUsuario);
