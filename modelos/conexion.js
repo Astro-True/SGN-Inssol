@@ -1,16 +1,24 @@
 const { Sequelize, DataTypes } = require("sequelize");
 //const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/InssolBD");
-const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/ejemplo");
+//const sequelize = new Sequelize("postgres://postgres:12345@localhost:5432/ejemplo");
 // Sequelize('postgresql://basededatosdelsol_user:SCMg0hfV0FoBuxmRIpz0qfV6OzOCzvOU@dpg-cru1i82j1k6c73e0k7l0-a.virginia-postgres.render.com/basededatosdelsol', {
-//   dialect: 'postgres',
-//   dialectOptions: {
-//     ssl: {
-//       require: true, // Requiere SSL
-//       rejectUnauthorized: false // Permitir conexiones sin verificar certificados
-//     }
-//   }
-// })
 //const sequelize = new Sequelize('postgres://postgres:12345@localhost:5432/ejemplo');
+const sequelize = new Sequelize(
+  'gestiondenotasinssol', // Nombre de la base de datos
+  'gestiondenotasinssol_user', // Usuario
+  'VBHWKwOFaNCUzSAIgl2B73UUnoKIqhko', // Contraseña
+  {
+    host: 'dpg-cuqhmplds78s73ftrgb0-a.oregon-postgres.render.com',
+    dialect: 'postgres',
+    port: 5432,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false
+      }
+    }
+  }
+);
 
 const Usuario = sequelize.define("Usuario", {
   nombre: {
@@ -75,38 +83,38 @@ const Roles = sequelize.define("Roles", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  Usuario:{
+  Usuario: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
-  Docente:{
+  Docente: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
-  Roles:{
+  Roles: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
-  Cursos:{
+  Cursos: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
-  Horarios:{
+  Horarios: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
-  Grados:{
+  Grados: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
     defaultValue: false
   },
 });
-Roles.hasMany(Usuario );
+Roles.hasMany(Usuario);
 Usuario.hasOne(Roles,);
 
 Usuario.hasMany(HistorialContrasenia);
@@ -122,7 +130,7 @@ async function probarconnexion() {
     await sequelize.authenticate();
     console.log("Conexión establecida correctamente.");
 
-        // Sincronización de tablas (esto eliminará y recreará las tablas si existen)
+    // Sincronización de tablas (esto eliminará y recreará las tablas si existen)
     await sequelize.sync({ force: true });
     console.log("Tablas sincronizadas correctamente (si existían, se han eliminado y recreado).");
     // Inserción de roles predeterminados
@@ -132,7 +140,7 @@ async function probarconnexion() {
       { Nombre_Rol: "Estudiante", Usuario: false, Docente: false, Roles: false, Cursos: false, Horarios: false, Grados: false },
     ]);
     console.log("Roles predeterminados insertados correctamente.");
-    
+
   } catch (error) {
     console.error("No se pudo conectar a la base de datos:", error);
   }
