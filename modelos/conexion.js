@@ -114,6 +114,26 @@ const Roles = sequelize.define("Roles", {
     defaultValue: false
   },
 });
+// Sincronizar base de datos y agregar usuario por defecto
+sequelize.sync({ force: false }) // Cambia a `true` solo si quieres borrar y recrear las tablas
+  .then(async () => {
+    console.log("Base de datos sincronizada");
+
+    // Buscar si ya existe un usuario con el nombre 'admin'
+    const usuarioExistente = await Usuario.findOne({ where: { nombre: 'admin' } });
+
+    if (!usuarioExistente) {
+      // Crear un usuario admin por defecto si no existe
+      await Usuario.create({
+        nombre: 'admin',
+        contrasenia: 'admin123', // Idealmente deberías encriptarla con bcrypt
+        RoleId: 1 // Suponiendo que 1 es el rol de administrador
+      });
+      console.log("Usuario admin creado por defecto");
+    }
+  })
+  .catch(error => console.error("Error al sincronizar la base de datos:", error));
+
 Roles.hasMany(Usuario);
 Usuario.hasOne(Roles,);
 
