@@ -20,7 +20,7 @@ app.use(_session);
 app.use(cors());
 app.use(express.urlencoded({ bodyparser: true }));
 app.use(express.json());
-app.use(express.static('public/AreaAdmin.html'));
+app.use(express.static('public'));
 
 const port = 3000;
   //para la creacion de tablas no existenten de BD
