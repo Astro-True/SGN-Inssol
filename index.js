@@ -20,14 +20,19 @@ app.use(_session);
 app.use(cors());
 app.use(express.urlencoded({ bodyparser: true }));
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('public/AreaAdmin.html'));
 
 const port = 3000;
   //para la creacion de tablas no existenten de BD
   probarconnexion();
 
+// app.get("/", (req, res) => {
+//   res.send("Hello World!");
+// });
+const path = require("path");
+
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.sendFile(path.join(__dirname, "public", "AreaAdmin.html"));
 });
 
 app.use("/Usuario", Usuariorutas);
