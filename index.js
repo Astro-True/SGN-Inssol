@@ -1,4 +1,4 @@
-const { probarconnexion } = require("./modelos/conexion");
+const { probarconnexion, crearAdminSiNoExiste } = require("./modelos/conexion");
 const express = require("express");
 const Usuariorutas = require("./rutas/Usuario-rutas");
 const DatosAcademicosrutas = require("./rutas/DatosAcademicos-rutas");
@@ -22,9 +22,25 @@ app.use(express.urlencoded({ bodyparser: true }));
 app.use(express.json());
 app.use(express.static('public'));
 
-const port = 3000;
-  //para la creacion de tablas no existenten de BD
-  //probarconnexion();
+const port = process.env.PORT || 3000;
+
+async function init() {
+  try {
+    // Primero establecer/crear tablas (probarconnexion usa force:true)
+    await probarconnexion();
+    // Luego crear datos por defecto sin forzar recreado
+    await crearAdminSiNoExiste();
+    // Arrancar servidor después de inicializar datos
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`);
+    });
+  } catch (err) {
+    console.error('Error en inicialización:', err);
+    process.exit(1);
+  }
+}
+
+init();
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -37,6 +53,4 @@ app.use("/Datospersonales", Datospersonalesrutas);
 app.use("/DatosAcademicos", DatosAcademicosrutas);
 app.use("/Autenticacion", AutenticacionRutas);
 
-app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
-});
+// server is started from init()

@@ -5,25 +5,25 @@
 }
 
 .layout {
-    background-color: #f0f0f0;
+    background: linear-gradient(180deg, #0d1c4a 0%, #0b1430 60%);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
     padding: 0;
+    color: #e6eef8;
 }
 
 .login-container {
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 18px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
     position: relative;
-    width: 18rem;
-    height: 25rem;
-    margin: 100px auto;
-    background: linear-gradient(136deg, rgba(109, 153, 210, 0.67) 28%, rgba(214, 213, 213, 0.67)50%, rgba(248, 191, 121, 0.67)75%);
-    border: 1mm ridge rgba(226, 227, 215, 0.6);
+    width: 20rem;
+    margin: 48px auto;
+    background: linear-gradient(135deg, rgba(14, 23, 66, 0.9) 0%, rgba(12, 18, 48, 0.75) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .logo {
@@ -52,11 +52,13 @@ h2 {
 .login-container input[type="number"],
 .login-container input[type="email"] {
     width: 100%;
-    padding: 6px;
-    margin-bottom: 1px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+    padding: 10px 8px;
+    margin-bottom: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
     box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.02);
+    color: #e6eef8;
 }
 
 .input-group i {
@@ -123,10 +125,15 @@ input {
 /*****************
 * recuperar.html *
 ******************/
+/* Inputs for recuperar view: match login styling and flow */
 .input-groupp {
-    position: relative;
-    top: 40px;
-    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.02);
 }
 
 /* .login-container input[type="email"]{
@@ -148,10 +155,8 @@ input {
 .ctr-btn-recuperrar {
     display: flex;
     justify-content: center;
-    top: 50%;
-    left: 50%;
-    position: absolute;
-    transform: translate(-50%);
+    gap: 12px;
+    margin-top: 12px;
 }
 
 .btn-recuperrar {
@@ -159,7 +164,7 @@ input {
     margin-left: 15px;
     width: 125px;
     padding: 10px;
-    background-color: #ffa500;
+    background-color: #cc660c;
     color: white;
     border: none;
     border-radius: 5px;
@@ -169,7 +174,7 @@ input {
 }
 
 .btn-recuperrar:hover {
-    background-color: #ff8c00;
+    background-color: #b25409;
 }
 
 /*****************
@@ -189,10 +194,8 @@ input {
 .ctr-btn-confirmar {
     display: flex;
     justify-content: center;
-    top: 80%;
-    left: 50%;
-    position: absolute;
-    transform: translate(-50%);
+    gap: 12px;
+    margin-top: 12px;
 }
 
 .btn-confirmar {
@@ -200,7 +203,7 @@ input {
     margin-left: 15px;
     width: 125px;
     padding: 10px;
-    background-color: #ffa500;
+    background-color: #cc660c;
     color: white;
     border: none;
     border-radius: 5px;
@@ -210,7 +213,7 @@ input {
 }
 
 .btn-confirmar:hover {
-    background-color: #ff8c00;
+    background-color: #b25409;
 }
 
 /* Estilos para la alerta personalizada */
@@ -272,8 +275,200 @@ main {
 footer {
     display: none;
 }
+
 #fondoAdmin {
     visibility: hidden;
-    display:  none;
+    display: none;
 }
 
+/* Material-like dialog and helpers for login view */
+.md-spinner {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin .9s linear infinite;
+    vertical-align: middle;
+    margin-left: 8px
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg)
+    }
+}
+
+.md-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999
+}
+
+.md-dialog {
+    width: 360px;
+    background: #fff;
+    border-radius: 8px;
+    padding: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2)
+}
+
+.md-title {
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #263238
+}
+
+.md-message {
+    color: #424242;
+    margin-bottom: 16px
+}
+
+.md-actions {
+    text-align: right
+}
+
+.md-btn {
+    background: transparent;
+    border: 0;
+    color: #1976d2;
+    padding: 8px 12px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px
+}
+
+.md-btn.primary {
+    background: #1976d2;
+    color: #fff
+}
+
+.field-error {
+    color: #d32f2f;
+    font-size: 13px;
+    margin-top: -8px;
+    margin-bottom: 8px;
+    display: none
+}
+
+/* Override/adjust input-group to match injected styles */
+.login-container {
+    max-width: 480px;
+    width: 400px;
+    max-height: 520px;
+    margin: 48px auto;
+    padding: 32px;
+    background: linear-gradient(135deg, #0e1742 0%, #0e1742 35%, lch(54.41% 70.19 59.28 / 60.60) 100%);
+    border-radius: 12px;
+    /* box-shadow: 0 10px 30px rgba(14, 23, 66, 0.18); */
+    box-shadow: 0 3px 29px #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #fff;
+}
+
+.login-container .logo img {
+    width: 92px;
+    height: 92px;
+    object-fit: cover;
+    border-radius: 50px;
+    display: block;
+    margin: 0 auto 12px;
+    border: 3px solid rgba(255, 255, 255, 0.06);
+}
+
+.login-container h2 {
+    text-align: center;
+    margin: 6px 0 18px;
+    color: #ffd8a8;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.input-group i {
+    margin-right: 10px;
+    color: #ffd8a8
+}
+
+.input-group input {
+    border: 0;
+    outline: none;
+    background: transparent;
+    flex: 1;
+    font-size: 15px;
+    color: #fff
+}
+
+.forgot-password {
+    display: block;
+    text-align: right;
+    font-size: 13px;
+    color: #ffd8a8;
+    text-decoration: none;
+    margin-bottom: 12px
+}
+
+#btn-ingresar {
+    width: 100%;
+    padding: 12px;
+    background: #cc660c;
+    color: #fff;
+    border: 0;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 6px 12px rgba(204, 102, 12, 0.16)
+}
+
+#btn-ingresar[disabled] {
+    opacity: 0.7;
+    cursor: default
+}
+
+.field-error {
+    color: #ffb4a6
+}
+
+/* Register button style */
+#btn-register {
+    width: 100%;
+    padding: 12px;
+    background: #0e1742;
+    color: #ffd8a8;
+    border: 2px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer
+}
+
+#btn-register:hover {
+    background: #0b1332
+}
+
+/* Generic .btn style for consistency */
+.btn-recuperrar,
+.btn-confirmar {
+    background: #cc660c;
+    color: #fff;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer
+}
+
+.btn-recuperrar:hover,
+.btn-confirmar:hover {
+    background: #b25409
+}

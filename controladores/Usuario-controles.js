@@ -116,6 +116,25 @@ async function usuarioCreate(req, res) {
   }
 }
 
+// Registro público simple (solo crea fila en Usuarios con rol por defecto)
+async function usuarioRegistrar(req, res) {
+  try {
+    const { nombre, contrasenia } = req.body;
+    if (!nombre || !contrasenia) return res.status(400).send({ message: 'Nombre y contraseña son requeridos' });
+    // Buscar rol por defecto (Estudiante) si existe
+    const [roles] = await sequelize.query(`SELECT id FROM "Roles" WHERE "Nombre_Rol" = ? LIMIT 1`, { replacements: ['Estudiante'] });
+    const roleId = roles && roles.length ? roles[0].id : null;
+    const [usuario] = await sequelize.query(
+      `INSERT INTO "Usuarios" (nombre, contrasenia, "RoleId", "createdAt", "updatedAt") VALUES (?, ?, ?, now(), now()) RETURNING id, nombre, "RoleId"`,
+      { replacements: [nombre, contrasenia, roleId] }
+    );
+    res.status(201).send({ message: 'Usuario registrado', data: usuario[0] });
+  } catch (error) {
+    console.error('Error en usuarioRegistrar:', error);
+    res.status(500).send({ message: 'Error al registrar usuario' });
+  }
+}
+
 // Actualizar un usuario
 async function actualizarUsuario(req, res) {
   try {
@@ -270,19 +289,6 @@ module.exports = {
   actualizarUsuario,
   usuarioDetalle,
   eliminarUsuario,
+  usuarioRegistrar,
 };
 
-[
-  {
-    id: 2,
-    nombre: "alex",
-    ci: "12345",
-    telefono: 123456,
-    Correo: "example@gmail.com",
-    FechaNacimiento: "2024-09-16",
-    Domicilio: "cliza",
-    GradoAcademico: "area",
-    AreaEspecializacion: "area1",
-    Grado: "segundo",
-  },
-];

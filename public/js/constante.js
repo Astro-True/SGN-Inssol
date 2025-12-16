@@ -48,3 +48,33 @@ const cookieToken  = new Cookie();
 window.cookieManager = cookieManager;
 window.cookieToken= cookieToken;
 
+// Diálogo global reutilizable (devuelve Promise<boolean>)
+window.showDialog = function({title='Info', message='', primaryText='OK', cancelText=null} = {}){
+        return new Promise((resolve)=>{
+                let overlay = document.getElementById('md-overlay-global');
+                if (!overlay) {
+                        overlay = document.createElement('div'); overlay.id = 'md-overlay-global'; overlay.className = 'md-overlay';
+                        overlay.innerHTML = `
+                            <div class="md-dialog" role="dialog" aria-modal="true">
+                                <div class="md-title" id="md-title-global">${title}</div>
+                                <div class="md-message" id="md-message-global">${message}</div>
+                                <div class="md-actions" id="md-actions-global"></div>
+                            </div>`;
+                        document.body.appendChild(overlay);
+                }
+                const t = document.getElementById('md-title-global');
+                const m = document.getElementById('md-message-global');
+                const actions = document.getElementById('md-actions-global');
+                t.textContent = title; m.textContent = message; actions.innerHTML = '';
+                if (cancelText) {
+                        const btnCancel = document.createElement('button'); btnCancel.className='md-btn'; btnCancel.textContent=cancelText;
+                        btnCancel.addEventListener('click', ()=>{ overlay.style.display='none'; resolve(false); });
+                        actions.appendChild(btnCancel);
+                }
+                const btnOk = document.createElement('button'); btnOk.className='md-btn primary'; btnOk.textContent=primaryText;
+                btnOk.addEventListener('click', ()=>{ overlay.style.display='none'; resolve(true); });
+                actions.appendChild(btnOk);
+                overlay.style.display = 'flex';
+        });
+}
+

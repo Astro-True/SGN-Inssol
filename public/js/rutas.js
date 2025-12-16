@@ -209,6 +209,23 @@ function rutas() {
             console.error("Error al cargar el script de Recuperar:", err);
         });
   }
+    // Cargar y renderizar la vista de registro
+    if (path === "/register") {
+    console.log("Cargando vista de register");
+    changeStylesheet("login.css");
+    loadScript("./js/view/registerView.js")
+      .then(() => {
+        console.log("Script de register cargado");
+        if (typeof renderRegisterView === "function") {
+          renderRegisterView();
+        } else {
+          console.error("La función renderRegisterView no está definida");
+        }
+      })
+      .catch((err) => {
+        console.error("Error al cargar el script de Register:", err);
+      });
+    }
   // Cargar y renderizar la vista de edición de Confirmar
   if (path === "/confirmar") {
     console.log("Cargando vista de confirmar");

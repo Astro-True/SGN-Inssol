@@ -13,6 +13,9 @@ const {
 router.get("/lista",authMiddleware, usuariosLista);
 router.get("/detalle/:id",authMiddleware, usuarioDetalle);
 router.post("/crear",authMiddleware, usuarioCreate);
+// Ruta pública para registro de nuevos usuarios
+const { usuarioRegistrar } = require("./../controladores/Usuario-controles");
+router.post("/registrar", usuarioRegistrar);
 
 router.put("/actualizar/:id",authMiddleware, actualizarUsuario);
 

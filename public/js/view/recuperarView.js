@@ -1,24 +1,18 @@
 function renderRecuperarView() {
     const html = `
     <div class="login-container">
+        <div class="logo"><img src="./img/logi.jpg" alt="Logo"></div>
         <h2 class="poppins-regular">Recuperar Contraseña</h2>
-        <form>
+        <form id="recuperar-form">
             <div class="input-groupp">
-                <i class="fa-solid fa-envelope"></i>
                 <input type="email" placeholder="Correo Electrónico" id="email">
             </div>
+            <div id="rec-email-err" class="field-error">Introduce un correo válido</div>
             <div class="ctr-btn-recuperrar">
-                <button class="btn-recuperrar" id="btn-rcpr-true" type="submit">Aceptar</button>
-                <button class="btn-recuperrar" id="btn-rcpr-false" type="submit">Cancelar</button>
+                <button class="btn-recuperrar" id="btn-rcpr-true" type="submit">Enviar</button>
+                <button class="btn-recuperrar" id="btn-rcpr-false" type="button">Cancelar</button>
             </div>
         </form>
-    </div>
-    <!-- Alerta personalizada -->
-    <div id="custom-alert" class="custom-alert" style="display: none;">
-        <div class="custom-alert-content">
-            <p id="alert-message"></p>
-            <button id="alert-ok-btn">OK</button>
-        </div>
     </div>
     `;
 
@@ -40,11 +34,18 @@ function renderRecuperarView() {
             rutas(e);
         }
     });
-    // Evento para el botón "Aceptar"
-    btnAceptar.addEventListener('click', (e) => {
-        e.preventDefault(); // Previene el comportamiento predeterminado del formulario
-        // Aquí puedes agregar la lógica para procesar el correo electrónico antes de redirigir
-        window.location.hash = '#/confirmar'; // Cambia al hash #confirmar
+    // Manejo del formulario de recuperar
+    document.getElementById('recuperar-form').addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const email = document.getElementById('email').value.trim();
+        document.getElementById('rec-email-err').style.display='none';
+        if (!email || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { document.getElementById('rec-email-err').style.display='block'; return; }
+        try{
+            // Llamada al endpoint de recupero (si existe)
+            await $.ajax({ type:'POST', url: `${URL_SERVER}/Historialcontraseniarutas/`, data:{ correo: email } });
+        } catch(err){ console.warn('Recuperar: endpoint no disponible o error', err); }
+        await window.showDialog({title:'Recuperar', message:'Si el correo existe, recibirás instrucciones.', primaryText:'OK'});
+        window.location.hash = '#/User';
     });
 
     // Evento para el botón "Cancelar"

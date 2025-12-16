@@ -24,7 +24,7 @@ async function iniciarSesion(req, res) {
 
         // Verifica si el resultado tiene datos
         if (!results || results.length === 0) {
-            return res.status(401).send({ message: "Usuario no permitido" });
+            return res.status(401).send({ message: "el Usuario no existe o la contraseña es incorrecta" });
         }
 
         // Cambiar la forma en que accedes a los resultados
