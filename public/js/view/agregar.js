@@ -124,8 +124,13 @@ function cargarRolesEnSelect() {
             "Content-Type": "application/json"
         },
         success: function(roles) {
+            // Asegurarse de no duplicar opciones aunque la función se llame varias veces
             selectRoles.empty().append('<option id="roleid" value="">Seleccione un rol</option>');
+            const seen = new Set();
             roles.forEach(rol => {
+                if (!rol || !rol.id) return;
+                if (seen.has(rol.id)) return; // evita duplicados
+                seen.add(rol.id);
                 selectRoles.append($('<option>', {
                     value: rol.id,
                     text: rol.nombre
@@ -138,5 +143,12 @@ function cargarRolesEnSelect() {
     });
 }
 // Llamada a la función para cargar los roles cuando el DOM esté listo
-document.addEventListener('DOMContentLoaded', renderAgregar);
+if (!window._agregarInit) {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', renderAgregar);
+    } else {
+        renderAgregar();
+    }
+    window._agregarInit = true;
+}
 

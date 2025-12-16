@@ -126,13 +126,16 @@ async function probarconnexion() {
     const forceSync = process.env.FORCE_SYNC === 'true';
     await sequelize.sync({ force: forceSync });
     console.log(`Tablas sincronizadas correctamente. force=${forceSync}`);
-    // Inserción de roles predeterminados
-    await Roles.bulkCreate([
+    // Asegurar roles predeterminados sin duplicarlos
+    const defaultRoles = [
       { Nombre_Rol: "Administrador", Usuario: true, Docente: true, Roles: true, Cursos: true, Horarios: true, Grados: true },
       { Nombre_Rol: "Docente", Usuario: false, Docente: false, Roles: false, Cursos: false, Horarios: false, Grados: false },
       { Nombre_Rol: "Estudiante", Usuario: false, Docente: false, Roles: false, Cursos: false, Horarios: false, Grados: false },
-    ]);
-    console.log("Roles predeterminados insertados correctamente.");
+    ];
+    for (const r of defaultRoles) {
+      await Roles.findOrCreate({ where: { Nombre_Rol: r.Nombre_Rol }, defaults: r });
+    }
+    console.log("Roles predeterminados asegurados (sin duplicados).");
     
   } catch (error) {
     console.error("No se pudo conectar a la base de datos:", error);
